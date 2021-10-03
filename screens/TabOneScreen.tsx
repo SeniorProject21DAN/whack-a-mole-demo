@@ -5,7 +5,29 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
+import * as firebase from "firebase";
+// import firestore from "firebase/firestore";
+
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyALU4G_DAjzU8oEzNbMg6YIpDelv_BnWCM",
+    authDomain: "whack-a-mole-motion.firebaseapp.com",
+    projectId: "whack-a-mole-motion",
+    storageBucket: "whack-a-mole-motion.appspot.com",
+    messagingSenderId: "878118269458",
+    appId: "1:878118269458:web:077ba628e86d65da101ecb",
+    measurementId: "G-29HV2MWXB5"
+  };
+
+  if (!firebase.default.apps.length) {
+    console.log('Connected with Firebase');
+    firebase.default.initializeApp(firebaseConfig);
+  }
+
+  firebase.default.firestore().collection("Hey").add({
+    num: 1,
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
