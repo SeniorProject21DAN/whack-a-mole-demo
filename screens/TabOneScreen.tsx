@@ -52,7 +52,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   const [left, _setLeft] = useState(0);
   const [right, _setRight] = useState(1);
 
-  const [coord, _setCoord] = useState([0,0])
+  const [coord, _setCoord] = useState([0, 0])
 
   const _slow = () => {
     DeviceMotion.setUpdateInterval(1000)
@@ -66,7 +66,28 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   const bottomRef = React.useRef(bottom);
   const leftRef = React.useRef(left);
   const rightRef = React.useRef(right);
-  const coordRef = React.useRef(coord)
+  const coordRef = React.useRef(coord);
+
+  const [write, setWrite] = React.useState(false);
+  const writeRef = React.useRef(write);
+  const toggleWrite = () => {
+    writeRef.current = !write;
+    setWrite(!write);
+  }
+
+  const [oldY, setOldY_] = React.useState(0);
+  const oldYRef = React.useRef(oldY);
+  const setOldY = (data: number) => {
+    oldYRef.current = data;
+    setOldY_(data);
+  }
+
+  const [whack, setWhack_] = React.useState(false);
+  const whackRef = React.useRef(whack);
+  const setWhack = (data: boolean) => {
+    whackRef.current = data;
+    setWhack_(data);
+  }
 
   const setTop = (data: number) => {
     topRef.current = data;
@@ -93,13 +114,24 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     rotSub = DeviceMotion.addListener(data => {
       setRotData(data.rotation);
       setCoord([((-data.rotation.alpha + leftRef.current) / (leftRef.current - rightRef.current))
-        * screenWidth, ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current)) 
-        * screenHeight]); //height of quad
-       
-      firebase.default.firestore().collection("MoleGames").doc("Bongo").set({
-        x: ((-data.rotation.alpha + leftRef.current) / (leftRef.current - rightRef.current)),
-        y: ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current))
-      });
+        * screenWidth, ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current))
+      * screenHeight]); //height of quad
+      
+      if(oldYRef.current - data.rotation.beta >= 1) {
+        setWhack(true);
+      }
+      else {
+        setWhack(false);
+      }
+      setOldY(data.rotation.beta);
+
+      if (writeRef.current) {
+        firebase.default.firestore().collection("MoleGames").doc("Bongo").set({
+          x: ((-data.rotation.alpha + leftRef.current) / (leftRef.current - rightRef.current)),
+          y: ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current)),
+          whack: whackRef.current
+        });
+      }
     });
   };
 
@@ -141,9 +173,13 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     });
   }
 
+  const fixSpeed = () => {
+    DeviceMotion.setUpdateInterval(300);
+  }
+
   useEffect(() => {
     _subscribe();
-    DeviceMotion.setUpdateInterval(250)
+    DeviceMotion.setUpdateInterval(500);
     return () => _unsubscribe();
   }, []);
 
@@ -153,7 +189,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {/* <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
       <View>
-      <TouchableOpacity onPress={_setTopLeft}>
+        <TouchableOpacity onPress={_setTopLeft}>
           <Text>Set Top Left</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={_setTopRight}>
@@ -164,6 +200,16 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         </TouchableOpacity>
         <TouchableOpacity onPress={_setBottomRight}>
           <Text>Set Bottom Right</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={toggleWrite}>
+          <Text>Toggle Write</Text>
+        </TouchableOpacity>
+        <View style={whack ? {backgroundColor: 'red', height: 10, width: 10} : 
+        {backgroundColor: 'white', height: 10, width: 10}}/>
+
+        <TouchableOpacity onPress={fixSpeed}>
+          <Text>Fix Speed</Text>
         </TouchableOpacity>
       </View>
     </View>
