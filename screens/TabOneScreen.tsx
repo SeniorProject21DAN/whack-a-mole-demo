@@ -27,9 +27,11 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     firebase.default.initializeApp(firebaseConfig);
   }
 
-  firebase.default.firestore().collection("Hey").add({
-    num: 1,
-  });
+  // firebase.default.firestore().collection("Hey").get().then(docs => {
+  //   docs.forEach(doc => {
+  //     firebase.default.firestore().collection("Hey").doc(doc.id).delete();
+  //   })
+  // })
 
   const [rotData, setRotData] = useState({
     alpha: 0,
