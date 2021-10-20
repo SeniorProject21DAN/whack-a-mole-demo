@@ -118,13 +118,13 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       setCoord([((-data.rotation.alpha + leftRef.current) / (leftRef.current - rightRef.current))
         * screenWidth, ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current))
       * screenHeight]); //height of quad
-      
-      if(oldYRef.current - data.rotation.beta >= 1) {
-        setWhack(true);
-      }
-      else {
-        setWhack(false);
-      }
+
+      // if (oldYRef.current - data.rotation.beta >= 1) {
+      //   setWhack(true);
+      // }
+      // else {
+      //   setWhack(false);
+      // }
       setOldY(data.rotation.beta);
 
       if (writeRef.current) {
@@ -133,6 +133,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           y: ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current)),
           whack: whackRef.current
         });
+        if (whackRef.current) {
+          setWhack(false);
+        }
       }
     });
   };
@@ -191,27 +194,42 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {/* <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
       <View>
-        <TouchableOpacity onPress={_setTopLeft}>
-          <Text>Set Top Left</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={_setTopRight}>
-          <Text>Set Top Right</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={_setBottomLeft}>
-          <Text>Set Bottom Left</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={_setBottomRight}>
-          <Text>Set Bottom Right</Text>
-        </TouchableOpacity>
+        <View style={{ display: 'flex', width: '100%', 'height': 100, flexDirection: 'row', }}>
+          <TouchableOpacity style={{ flex: .5, backgroundColor: 'magenta' }} onPress={_setTopLeft}>
+            <Text>Set Top Left</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ flex: .5, backgroundColor: 'yellow' }} onPress={_setTopRight}>
+            <Text>Set Top Right</Text>
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity onPress={toggleWrite}>
-          <Text>Toggle Write</Text>
-        </TouchableOpacity>
-        <View style={whack ? {backgroundColor: 'red', height: 10, width: 10} : 
-        {backgroundColor: 'white', height: 10, width: 10}}/>
+        <View style={{ display: 'flex', width: '100%', 'height': 100, flexDirection: 'row', }}>
+          <TouchableOpacity style={{ flex: .5, backgroundColor: 'lime' }} onPress={_setBottomLeft}>
+            <Text>Set Bottom Left</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ flex: .5, backgroundColor: 'cyan' }} onPress={_setBottomRight}>
+            <Text>Set Bottom Right</Text>
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity onPress={fixSpeed}>
-          <Text>Fix Speed</Text>
+        <View style={{ display: 'flex', width: '100%', 'height': 100, flexDirection: 'row', }}>
+          <TouchableOpacity style={{ flex: .5, backgroundColor: 'lightgray' }} onPress={toggleWrite}>
+            <Text>Toggle Write</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ flex: .5, backgroundColor: 'gray' }} onPress={fixSpeed}>
+            <Text>Fix Speed</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={whack ? { backgroundColor: 'red', height: 10, width: 10 } :
+            { backgroundColor: 'white', height: 10, width: 10 }} />
+
+        <View style={write ? { backgroundColor: 'blue', height: 10, width: 10 } :
+            { backgroundColor: 'white', height: 10, width: 10 }} />
+
+        <TouchableOpacity style={{ width: 300, height: 150, backgroundColor: 'red' }} onPress={() => setWhack(true)}>
+          <Text style={{ lineHeight: 125, textAlign: 'center', color: 'white', fontSize: 50 }}>Whack</Text>
         </TouchableOpacity>
       </View>
     </View>
