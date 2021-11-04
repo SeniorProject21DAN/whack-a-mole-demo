@@ -179,7 +179,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   }
 
   const fixSpeed = () => {
-    DeviceMotion.setUpdateInterval(300);
+    DeviceMotion.setUpdateInterval(100);
   }
 
   useEffect(() => {
@@ -228,7 +228,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         <View style={write ? { backgroundColor: 'blue', height: 10, width: 10 } :
             { backgroundColor: 'white', height: 10, width: 10 }} />
 
-        <TouchableOpacity style={{ width: 300, height: 150, backgroundColor: 'red' }} onPress={() => setWhack(true)}>
+        <TouchableOpacity style={{ width: '100%', height: 150, backgroundColor: 'red' }} onPress={() => setWhack(true)}>
           <Text style={{ lineHeight: 125, textAlign: 'center', color: 'white', fontSize: 50 }}>Whack</Text>
         </TouchableOpacity>
       </View>
