@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { EventSubscription, StyleSheet, TouchableOpacity } from 'react-native';
-
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import { DeviceMotion, Accelerometer } from 'expo-sensors';
+import { Subscription } from 'expo-modules-core';
 const KalmanFilter = require('kalman-filter/lib/kalman-filter.js');
 
 const State = require('kalman-filter/lib/state.js');
@@ -12,50 +12,30 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 
 	const kFilter = new KalmanFilter({
 		observation: {
-			sensorDimension: 3,
+			sensorDimension: 2,
 			name: 'sensor'
 		},
 		dynamic: {
-			name: 'constant-acceleration',// observation.sensorDimension * 3 == state.dimension
+			name: 'constant-acceleration', // Observation.sensorDimension * 3 == state.dimension
 			timeStep: 0.1,
-			covariance: [3, 3, 3, 4, 4, 4, 5, 5, 5]// equivalent to diag([3, 3, 3, 4, 4, 4, 5, 5, 5])
+			covariance: [3, 3, 4, 4, 5, 5]// Equivalent to diag([3, 3, 4, 4, 5, 5])
 		}
-	})
-	const observations = [[0, 2, 3], [0.1, 4, 7], [0.5, 9, 11], [0.2, 12, 15]];
-
-	// batch kalman filter
-	// console.log(kFilter.filterAll(observations));
-	// console.log(kFilter.predict({
-	// 	x: 1,
-	// 	y: 2,
-	// 	z: 3
-	// }));
-
-	// let previousCorrected: any = null;
-	let previousCorrected = new State({
-		mean: [[100], [100], [100], [10], [10], [10], [0], [0], [0]],
-		covariance: [
-			[1, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 1, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 1, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0.01, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0.01, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0.01, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0.0001, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0.0001, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0.0001]
-		],
-		index: 1
 	});
+
+	const [previousCorrected, setPreviousCorrected] = useState(new State({
+		mean: [[100], [100], [10], [10], [0], [0]],
+		covariance: [
+			[1, 0, 0, 0, 0, 0],
+			[0, 1, 0, 0, 0, 0],
+			[0, 0, 0.01, 0, 0, 0],
+			[0, 0, 0, 0.01, 0, 0],
+			[0, 0, 0, 0, 0.0001, 0],
+			[0, 0, 0, 0, 0, 0.0001]
+		]
+	}));
 	const results: any[] = [];
-	// observations.forEach(observation => {
-	// 	previousCorrected = kFilter.filter({ previousCorrected, observation });
-	// 	results.push(previousCorrected.mean);
-	// });
 
-	// console.log(results);
-
-	let accSub: EventSubscription | null = null;
+	let accSub: Subscription | null = null;
 
 	const [startTime, setStartTime] = useState(0);
 
@@ -91,16 +71,13 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 	const velRef = React.useRef(velData);
 	const posRef = React.useRef(posData);
 	const runRef = React.useRef(accRunning);
-
-	let NS2S = 1.0 / 1000000000.0;
+	const prevCorrRef = React.useRef(previousCorrected);
 
 	const _subscribe = () => {
 		accSub = DeviceMotion.addListener(data => {
 			if (data.acceleration && runRef.current) {
 				setPrevAccData(accRef.current);
 				prevAccRef.current = accRef.current;
-				setAccData(data.acceleration);
-				accRef.current = data.acceleration;
 
 				let dt = ((Date.now() - timeRef.current) / 1000); //current time in seconds
 				setStartTime(Date.now());
@@ -108,31 +85,43 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 				console.log(dt);
 				let gToMSS = 9.80665 //g to m/s^2
 
+				let prevCorrected = prevCorrRef.current;
+
 				const predictedState = kFilter.predict({
-					previousCorrected
+					prevCorrected
 				});
 
-				console.log(predictedState instanceof State);
-			
 				const correctedState = kFilter.correct({
 					predicted: new State({
 						covariance: predictedState.covariance,
 						mean: predictedState.mean,
 						index: predictedState.index
 					}),
-					observation: [[data.acceleration.x], [data.acceleration.y], [data.acceleration.z]]
+					observation: [[data.acceleration.x], [data.acceleration.z]]
 				});
 
 				console.log(correctedState);
-			
+
 				results.push(correctedState.mean);
-			
+
 				// update the previousCorrected for next loop iteration
-				previousCorrected = correctedState
+				setPreviousCorrected(correctedState);
+				prevCorrRef.current = correctedState;
+
+				setAccData({
+					x: correctedState.mean[2],
+					y: correctedState.mean[5],
+					z: data.acceleration.z
+				});
+				accRef.current = {
+					x: correctedState.mean[2],
+					y: correctedState.mean[5],
+					z: data.acceleration.z
+				};
 
 				let velocity = {
-					x: velRef.current.x + (((data.acceleration.x * gToMSS) + (prevAccData.x * gToMSS)) / 2 * dt),
-					y: velRef.current.y + (((data.acceleration.y * gToMSS) + (prevAccData.y * gToMSS)) / 2 * dt),
+					x: (((correctedState.mean[2] * gToMSS) + (prevAccData.x * gToMSS)) / 2 * dt),
+					y: (((correctedState.mean[5] * gToMSS) + (prevAccData.y * gToMSS)) / 2 * dt),
 					z: velRef.current.z + (((data.acceleration.z * gToMSS) + (prevAccData.z * gToMSS)) / 2 * dt)
 				}
 
@@ -164,17 +153,6 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 
 				setPosData(position);
 				posRef.current = position;
-
-				// if (writeRef.current) {
-				// 	firebase.default.firestore().collection("MoleGames").doc("Bongo").set({
-				// 		x: ((-data.rotation.alpha + leftRef.current) / (leftRef.current - rightRef.current)),
-				// 		y: ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current)),
-				// 		whack: whackRef.current
-				// 	});
-				// 	if (whackRef.current) {
-				// 		setWhack(false);
-				// 	}
-				// }
 			}
 		});
 	};
@@ -183,6 +161,62 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 		// subscription && subscription.remove();
 		accSub?.remove();
 	};
+
+	const calibrateFilter = () => {
+		let sub = DeviceMotion.addListener(data => {
+			if (data.acceleration) {
+				let prevCorrected = prevCorrRef.current;
+
+				const predictedState = kFilter.predict({
+					predicted: new State({
+						mean: [[0], [0], [0], [0], [0], [0]],
+						covariance: [
+							[0.0001, 0, 0, 0, 0, 0],
+							[0, 0.0001, 0, 0, 0, 0],
+							[0, 0, 0.0001, 0, 0, 0],
+							[0, 0, 0, 0.0001, 0, 0],
+							[0, 0, 0, 0, 0.0001, 0],
+							[0, 0, 0, 0, 0, 0.0001]
+						]
+					})
+				});
+
+				const correctedState = kFilter.correct({
+					predicted: new State({
+						covariance: predictedState.covariance,
+						mean: predictedState.mean,
+						index: predictedState.index
+					}),
+					observation: [[data.acceleration.x], [data.acceleration.z]]
+				});
+
+				setAccData({
+					x: correctedState.mean[2],
+					y: correctedState.mean[5],
+					z: data.acceleration.z
+				});
+				accRef.current = {
+					x: correctedState.mean[2],
+					y: correctedState.mean[5],
+					z: data.acceleration.z
+				};
+
+				// update the previousCorrected for next loop iteration
+				setPreviousCorrected(correctedState);
+				prevCorrRef.current = correctedState;
+
+				if (Math.abs(correctedState.mean[2]) < 0.001 && Math.abs(correctedState.mean[5]) < 0.001) {
+					_subscribe();
+					toggleAcc();
+					sub.remove();
+				}
+
+			}
+			else {
+				sub.remove();
+			}
+		});
+	}
 
 	const fixSpeed = () => {
 		DeviceMotion.setUpdateInterval(100);
@@ -201,44 +235,11 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 	}
 
 	useEffect(() => {
-		_subscribe();
+		//_subscribe();
+		calibrateFilter();
 		DeviceMotion.setUpdateInterval(500);
 		return () => _unsubscribe();
 	}, []);
-
-	const kalFilter = new KalmanFilter({
-		observation: {
-			sensorDimension: 2,
-			name: 'sensor'
-		},
-		dynamic: {
-			name: 'constant-acceleration', // Observation.sensorDimension * 3 == state.dimension
-			timeStep: 0.1,
-			covariance: [3, 3, 4, 4, 5, 5]// Equivalent to diag([3, 3, 4, 4, 5, 5])
-		}
-	});
-	const prevCorrected = new State({
-		mean: [[100], [100], [10], [10], [0], [0]],
-		covariance: [
-			[1, 0, 0, 0, 0, 0],
-			[0, 1, 0, 0, 0, 0],
-			[0, 0, 0.01, 0, 0, 0],
-			[0, 0, 0, 0.01, 0, 0],
-			[0, 0, 0, 0, 0.0001, 0],
-			[0, 0, 0, 0, 0, 0.0001]
-		]
-	});
-	const obs = [[102], [101]];
-	const predicted = kalFilter.predict({prevCorrected});
-	const corrected = kalFilter.correct({
-		predicted,
-		observation: obs
-	});
-	// console.log(corrected);
-	// console.log(predicted instanceof State);
-	// console.log(predicted.mean.length, 6);
-	// console.log(corrected instanceof State);
-	// console.log(corrected.mean.length, 6);
 
 	return (
 		<View style={styles.container}>
