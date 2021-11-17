@@ -63,6 +63,18 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 		z: 0,
 	});
 
+	const [drift, setDrift] = useState({
+		x: 0,
+		y: 0,
+	})
+
+	const [avgDrift, setAvgDrift] = useState({
+		x: 0,
+		y: 0
+	})
+
+	const [driftIters,setDriftIters] = useState(0);
+
 	const [accRunning, setAccRunning] = useState(false);
 
 	const timeRef = React.useRef(startTime);
@@ -73,6 +85,10 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 	const runRef = React.useRef(accRunning);
 	const prevCorrRef = React.useRef(previousCorrected);
 
+	const driftRef = React.useRef(drift);
+	const avgDriftRef = React.useRef(avgDrift);
+	const driftItersRef = React.useRef(driftIters);
+
 	const _subscribe = () => {
 		accSub = DeviceMotion.addListener(data => {
 			if (data.acceleration && runRef.current) {
@@ -82,8 +98,8 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 				let dt = ((Date.now() - timeRef.current) / 1000); //current time in seconds
 				setStartTime(Date.now());
 				timeRef.current = Date.now();
-				console.log(dt);
-				let gToMSS = 9.80665 //g to m/s^2
+				//console.log(dt);
+				//let gToMSS = 9.80665 //g to m/s^2 (don't actually need)
 
 				let prevCorrected = prevCorrRef.current;
 
@@ -97,16 +113,42 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 						mean: predictedState.mean,
 						index: predictedState.index
 					}),
-					observation: [[data.acceleration.x], [data.acceleration.z]]
+					observation: [[data.acceleration.x - (avgDriftRef.current.x /* * (Math.random() > 0.5 ? 1 : -1)*/)], 
+						[data.acceleration.z - (avgDriftRef.current.y /* * (Math.random() > 0.5 ? 1 : -1)*/)]]
 				});
 
-				console.log(correctedState);
+				//console.log(correctedState);
 
-				results.push(correctedState.mean);
+				//results.push(correctedState.mean);
 
 				// update the previousCorrected for next loop iteration
 				setPreviousCorrected(correctedState);
 				prevCorrRef.current = correctedState;
+
+				let velocity = { //v(t) = a(t) + v(0)
+					x: ((correctedState.mean[2]) * dt) + velRef.current.x,
+					y: ((correctedState.mean[5]) * dt) + velRef.current.y,
+					//x: (((correctedState.mean[2] * gToMSS) + (prevAccData.x * gToMSS)) / 2 * dt),
+					//y: (((correctedState.mean[5] * gToMSS) + (prevAccData.y * gToMSS)) / 2 * dt),
+					z: velRef.current.z + (((data.acceleration.z ) + (prevAccData.z)) / 2 * dt)
+				}
+
+				// if(data.acceleration.x < 0.1) {
+				// 	velocity.x = velocity.x * (Math.random() > 0.5 ? 1 : -1);
+				// }	
+				// if(data.acceleration.y < 0.1) {
+				// 	velocity.y = velocity.y * (Math.random() > 0.5 ? 1 : -1);
+				// }
+				// if (data.acceleration.z < 0.1) {
+				// 	velocity.z = 0;
+				// }
+
+				if(Math.abs(correctedState.mean[2]) < 0.05 && Math.abs(accRef.current.x) < 0.05) {
+					velocity.x = 0;
+				}
+				if(Math.abs(correctedState.mean[5]) < 0.05 && Math.abs(accRef.current.y) < 0.05) {
+					velocity.y = 0;
+				}
 
 				setAccData({
 					x: correctedState.mean[2],
@@ -119,21 +161,6 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 					z: data.acceleration.z
 				};
 
-				let velocity = {
-					x: (((correctedState.mean[2] * gToMSS) + (prevAccData.x * gToMSS)) / 2 * dt),
-					y: (((correctedState.mean[5] * gToMSS) + (prevAccData.y * gToMSS)) / 2 * dt),
-					z: velRef.current.z + (((data.acceleration.z * gToMSS) + (prevAccData.z * gToMSS)) / 2 * dt)
-				}
-
-				// if(data.acceleration.x < 0.1) {
-				// 	velocity.x = 0;
-				// }	
-				// if(data.acceleration.y < 0.1) {
-				// 	velocity.y = 0;
-				// }
-				if (data.acceleration.z < 0.1) {
-					velocity.z = 0;
-				}
 
 				//Initial velocity (g/s) + acceleration (g/s^2) * time (s)
 				// let velocity = {
@@ -161,6 +188,38 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 		// subscription && subscription.remove();
 		accSub?.remove();
 	};
+
+	const calibrate = () => {
+		let sub = DeviceMotion.addListener(data => {
+			if (data.acceleration) {
+				let drifts = {
+					x: driftRef.current.x + data.acceleration.x,
+					y: driftRef.current.y + data.acceleration.y
+				}
+				setDrift(drifts)
+				driftRef.current = drifts;
+				setDriftIters(driftItersRef.current + 1)
+				driftItersRef.current += 1;
+				console.log(driftItersRef.current);
+
+				if (driftItersRef.current == 100) {
+					let driftAvgs = {
+						x: driftRef.current.x / 100,
+						y: driftRef.current.y / 100
+					}
+					setAvgDrift(driftAvgs);
+					avgDriftRef.current = driftAvgs;
+					_subscribe();
+					toggleAcc();
+					sub.remove();
+				}
+
+			}
+			else {
+				sub.remove();
+			}
+		});
+	}
 
 	const calibrateFilter = () => {
 		let sub = DeviceMotion.addListener(data => {
@@ -236,7 +295,8 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 
 	useEffect(() => {
 		//_subscribe();
-		calibrateFilter();
+		//calibrateFilter();
+		calibrate();
 		DeviceMotion.setUpdateInterval(500);
 		return () => _unsubscribe();
 	}, []);
