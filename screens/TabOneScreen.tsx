@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
 import { DeviceMotion } from 'expo-sensors';
-import { Subscription } from '@unimodules/react-native-adapter';
 
 import * as firebase from "firebase";
+import { Subscription } from 'expo-modules-core';
 // import firestore from "firebase/firestore";
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
@@ -32,6 +32,15 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   //     firebase.default.firestore().collection("Hey").doc(doc.id).delete();
   //   })
   // })
+
+  const [playerName, setName] = React.useState("Sample");
+  const nameRef = React.useRef(playerName);
+
+  const onChangeName = (name: string) => {
+    nameRef.current = name;
+    setName(name)
+  }
+
 
   const [rotData, setRotData] = useState({
     alpha: 0,
@@ -128,11 +137,19 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       setOldY(data.rotation.beta);
 
       if (writeRef.current) {
-        firebase.default.firestore().collection("MoleGames").doc("Bongo").set({
+        let doc = {
+          name: nameRef.current,
           x: ((-data.rotation.alpha + leftRef.current) / (leftRef.current - rightRef.current)),
           y: ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current)),
           whack: whackRef.current
-        });
+        }
+        if(doc.x < 0) doc.x = 0;
+        else if(doc.x > 1) doc.x = 1
+
+        if(doc.y < 0) doc.y = 0;
+        else if(doc.y > 1) doc.y = 1
+
+        firebase.default.firestore().collection("MoleGames").doc(nameRef.current).set(doc);
         if (whackRef.current) {
           setWhack(false);
         }
@@ -179,7 +196,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   }
 
   const fixSpeed = () => {
-    DeviceMotion.setUpdateInterval(100);
+    DeviceMotion.setUpdateInterval(200);
   }
 
   useEffect(() => {
@@ -194,6 +211,13 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {/* <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
       <View>
+
+        <TextInput
+          onChangeText={onChangeName}
+          value={playerName}
+          style={styles.input}
+        />
+
         <View style={{ display: 'flex', width: '100%', 'height': 100, flexDirection: 'row', }}>
           <TouchableOpacity style={{ flex: .5, backgroundColor: 'magenta' }} onPress={_setTopLeft}>
             <Text>Set Top Left</Text>
@@ -223,10 +247,10 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         </View>
 
         <View style={whack ? { backgroundColor: 'red', height: 10, width: 10 } :
-            { backgroundColor: 'white', height: 10, width: 10 }} />
+          { backgroundColor: 'white', height: 10, width: 10 }} />
 
         <View style={write ? { backgroundColor: 'blue', height: 10, width: 10 } :
-            { backgroundColor: 'white', height: 10, width: 10 }} />
+          { backgroundColor: 'white', height: 10, width: 10 }} />
 
         <TouchableOpacity style={{ width: '100%', height: 150, backgroundColor: 'red' }} onPress={() => setWhack(true)}>
           <Text style={{ lineHeight: 125, textAlign: 'center', color: 'white', fontSize: 50 }}>Whack</Text>
@@ -250,5 +274,11 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });

@@ -202,10 +202,10 @@ export default function TabTwoScreen({ route, navigation }: RootTabScreenProps<'
 				driftItersRef.current += 1;
 				console.log(driftItersRef.current);
 
-				if (driftItersRef.current == 100) {
+				if (driftItersRef.current == 25) {
 					let driftAvgs = {
-						x: driftRef.current.x / 100,
-						y: driftRef.current.y / 100
+						x: driftRef.current.x / 25,
+						y: driftRef.current.y / 25
 					}
 					setAvgDrift(driftAvgs);
 					avgDriftRef.current = driftAvgs;
