@@ -6,9 +6,9 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
 import { DeviceMotion } from 'expo-sensors';
-import { Subscription } from '@unimodules/react-native-adapter';
 
 import * as firebase from "firebase";
+import { Subscription } from 'expo-modules-core';
 // import firestore from "firebase/firestore";
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
@@ -27,11 +27,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     firebase.default.initializeApp(firebaseConfig);
   }
 
-  // firebase.default.firestore().collection("Hey").get().then(docs => {
-  //   docs.forEach(doc => {
-  //     firebase.default.firestore().collection("Hey").doc(doc.id).delete();
-  //   })
-  // })
+  let ws = React.useRef(new WebSocket('ws:153.106.226.103:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const [rotData, setRotData] = useState({
     alpha: 0,
@@ -185,6 +181,31 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   useEffect(() => {
     _subscribe();
     DeviceMotion.setUpdateInterval(500);
+
+    const serverMessagesList = [];
+    ws.onopen = () => {
+      ws.send("s:h:susus");
+      console.log("???");
+      // setServerState('Connected to the server')
+      // setDisableButton(false);
+    };
+    ws.onclose = (e) => {
+      // setServerState('Disconnected. Check internet or server.')
+      // setDisableButton(true);
+    };
+    ws.onerror = (e) => {
+      // setServerState(e.message);
+    };
+    ws.onmessage = (e) => {
+      console.log(e);
+      console.log(e.data);
+      if (e.data == "m:buzz") {
+        //Vibration.vibrate();
+      }
+      // serverMessagesList.push(e.data);
+      // setServerMessages([...serverMessagesList])
+    };
+
     return () => _unsubscribe();
   }, []);
 
@@ -223,10 +244,10 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         </View>
 
         <View style={whack ? { backgroundColor: 'red', height: 10, width: 10 } :
-            { backgroundColor: 'white', height: 10, width: 10 }} />
+          { backgroundColor: 'white', height: 10, width: 10 }} />
 
         <View style={write ? { backgroundColor: 'blue', height: 10, width: 10 } :
-            { backgroundColor: 'white', height: 10, width: 10 }} />
+          { backgroundColor: 'white', height: 10, width: 10 }} />
 
         <TouchableOpacity style={{ width: '100%', height: 150, backgroundColor: 'red' }} onPress={() => setWhack(true)}>
           <Text style={{ lineHeight: 125, textAlign: 'center', color: 'white', fontSize: 50 }}>Whack</Text>
