@@ -19,7 +19,7 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import { createStackNavigator } from '@react-navigation/stack';
-// import Home from '../screens/Home';
+import Home from '../screens/Home';
 // import Client from '../screens/Client';
 // import HostSetup from '../screens/HostSetup';
 
@@ -35,7 +35,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen name="Home" component={Home}/> */}
+        <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
         {/* <Stack.Screen name="Client" component={Client}/> */}
         {/* <Stack.Screen name="Host" component={HostSetup}/> */}
       </Stack.Navigator>
