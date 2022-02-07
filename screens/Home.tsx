@@ -19,12 +19,12 @@ export default function Home() {
             </View>
             {/* Two "buttons." Full screen (minus the header) sides for host and client.*/}
             <View style={styles.sidesContainer}>
-                <TouchableOpacity style={styles.buttons}>
+                <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("Host")}>
                     <View style={ [styles.buttonContent, {backgroundColor: "lightblue"}]  }>
                         <Text style={styles.sidesText}>Host</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttons}>
+                <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("Client")}>
                     <View style={ [styles.buttonContent, {backgroundColor: "lightgreen"}]  }>
                         <Text style={styles.sidesText}>Client</Text>
                     </View>

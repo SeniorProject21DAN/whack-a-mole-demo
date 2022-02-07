@@ -20,8 +20,8 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/Home';
-// import Client from '../screens/Client';
-// import HostSetup from '../screens/HostSetup';
+import Client from '../screens/Client';
+import HostSetup from '../screens/HostSetup';
 
 const Stack = createStackNavigator();
 
@@ -36,8 +36,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
-        {/* <Stack.Screen name="Client" component={Client}/> */}
-        {/* <Stack.Screen name="Host" component={HostSetup}/> */}
+        <Stack.Screen name="Host" component={HostSetup} options={{headerShown: false}}/>
+        <Stack.Screen name="Client" component={Client} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
