@@ -64,39 +64,31 @@ export default function HostSetup() {
     return (
         <View style={styles.screenContainer}>
             <View style={styles.headerContainer}>
-                <View style={styles.backButton}>
-                    <MaterialIcons name="delete" size={28} color='green'/>
-                </View>
-                <Text style={styles.headerText}>Room Code: </Text>
+                <TouchableOpacity style={styles.backButton}>
+                    <MaterialIcons name="delete" size={28} color='white' />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>Room Code: {roomID}</Text>
             </View>
             <View style={styles.connectedPlayersContainer}>
                 <Text>Middle: Current Players</Text>
             </View>
             <View style={styles.calibrationContainer}>
-                <Text style={{alignSelf: "center"}}>Bottom: Calibrate</Text>
+                <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text>
                 <View style={styles.calibrateRows}>
-                    {/* <TouchableOpacity> */}
-                    <View style={[styles.calibrationButtons, {marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN}]}>
+                    <TouchableOpacity style={[styles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
                         <Text>Top Left</Text>
-                    </View>
-                    {/* </TouchableOpacity> */}
-                    {/* <TouchableOpacity> */}
-                    <View style={[styles.calibrationButtons, {marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN}]}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
                         <Text>Top Right</Text>
-                    </View>
-                    {/* </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.calibrateRows}>
-                    {/* <TouchableOpacity> */}
-                    <View style={[styles.calibrationButtons, {marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN}]}>
+                    <TouchableOpacity style={[styles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
                         <Text>Bottom Left</Text>
-                    </View>
-                    {/* </TouchableOpacity> */}
-                    {/* <TouchableOpacity> */}
-                    <View style={[styles.calibrationButtons, {marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN}]}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
                         <Text>Bottom Right</Text>
-                    </View>
-                    {/* </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -105,21 +97,21 @@ export default function HostSetup() {
 
 const styles = StyleSheet.create({
     screenContainer: {
-        flex: 1, 
-        alignSelf: "stretch", 
+        flex: 1,
+        alignSelf: "stretch",
         justifyContent: "space-evenly"
     },
     headerContainer: {
         flex: 1,
-        backgroundColor: "brown", 
-        alignItems: "center", 
-        justifyContent: "center",
+        backgroundColor: "brown",
+        alignItems: "center",
+        // justifyContent: "center",
         flexDirection: "row",
 
     },
     connectedPlayersContainer: {
         flex: 3,
-        backgroundColor: "lightgreen", 
+        backgroundColor: "lightgreen",
         alignItems: "center",
     },
     calibrationContainer: {
@@ -135,7 +127,7 @@ const styles = StyleSheet.create({
         backgroundColor: "lightblue",
         flexDirection: "row",
     },
-    calibrationButtons:{
+    calibrationButtons: {
         flex: 1,
         backgroundColor: "purple",
         // borderRadius: 15,
@@ -143,13 +135,18 @@ const styles = StyleSheet.create({
         margin: 20,
         alignItems: "center"
     },
-    backButton:{
+    backButton: {
         borderRadius: 75,
-        margin: 4,
+        margin: 20,
+        // backgroundColor: "black",
+        alignSelf: "center"
     },
     headerText: {
         fontWeight: "bold",
-        fontSize: 20
+        fontSize: 20,
+        alignSelf: "center",
+        justifyContent: "center",
+
     },
     sidesText: {
 
