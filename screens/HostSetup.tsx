@@ -8,6 +8,7 @@ import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/Tr
 import { MaterialIcons } from '@expo/vector-icons';
 
 const LENGTH = 5; // Length of the Room ID
+const BUTTON_MARGIN = 8;
 
 export default function HostSetup() {
     const navigation = useNavigation();
@@ -61,24 +62,53 @@ export default function HostSetup() {
 
 
     return (
-        <View style={{flex: 1, alignSelf: "stretch", justifyContent: "space-evenly"}}>
+        <View style={styles.screenContainer}>
             <View style={styles.headerContainer}>
                 <View style={styles.backButton}>
                     <MaterialIcons name="delete" size={28} color='green'/>
                 </View>
-                <Text style={styles.headerText}>Room Code: <var>roomID</var></Text>
+                <Text style={styles.headerText}>Room Code: </Text>
             </View>
             <View style={styles.connectedPlayersContainer}>
                 <Text>Middle: Current Players</Text>
             </View>
             <View style={styles.calibrationContainer}>
-                <Text>Bottom: Calibrate</Text>
+                <Text style={{alignSelf: "center"}}>Bottom: Calibrate</Text>
+                <View style={styles.calibrateRows}>
+                    {/* <TouchableOpacity> */}
+                    <View style={[styles.calibrationButtons, {marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN}]}>
+                        <Text>Top Left</Text>
+                    </View>
+                    {/* </TouchableOpacity> */}
+                    {/* <TouchableOpacity> */}
+                    <View style={[styles.calibrationButtons, {marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN}]}>
+                        <Text>Top Right</Text>
+                    </View>
+                    {/* </TouchableOpacity> */}
+                </View>
+                <View style={styles.calibrateRows}>
+                    {/* <TouchableOpacity> */}
+                    <View style={[styles.calibrationButtons, {marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN}]}>
+                        <Text>Bottom Left</Text>
+                    </View>
+                    {/* </TouchableOpacity> */}
+                    {/* <TouchableOpacity> */}
+                    <View style={[styles.calibrationButtons, {marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN}]}>
+                        <Text>Bottom Right</Text>
+                    </View>
+                    {/* </TouchableOpacity> */}
+                </View>
             </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    screenContainer: {
+        flex: 1, 
+        alignSelf: "stretch", 
+        justifyContent: "space-evenly"
+    },
     headerContainer: {
         flex: 1,
         backgroundColor: "brown", 
@@ -95,7 +125,23 @@ const styles = StyleSheet.create({
     calibrationContainer: {
         flex: 3,
         backgroundColor: "lightblue",
-        alignItems: "center",
+        // alignItems: "flex-start",
+        // flexWrap: "wrap",
+        flexDirection: "column",
+        justifyContent: "space-evenly"
+    },
+    calibrateRows: {
+        flex: 1,
+        backgroundColor: "lightblue",
+        flexDirection: "row",
+    },
+    calibrationButtons:{
+        flex: 1,
+        backgroundColor: "purple",
+        // borderRadius: 15,
+        alignSelf: "stretch",
+        margin: 20,
+        alignItems: "center"
     },
     backButton:{
         borderRadius: 75,
