@@ -6,6 +6,7 @@ import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
 import { MaterialIcons } from '@expo/vector-icons';
+import { globalStyles } from '../components/globalStyles'
 
 const LENGTH = 5; // Length of the Room ID
 const BUTTON_MARGIN = 8;
@@ -62,35 +63,37 @@ export default function HostSetup() {
 
 
     return (
-        <View style={styles.screenContainer}>
-            <View style={styles.headerContainer}>
-                <TouchableOpacity style={styles.backButton}>
+        <View style={globalStyles.screenContainer}>
+            <View style={globalStyles.headerContainer}>
+                <TouchableOpacity style={globalStyles.backButton}>
                     <MaterialIcons name="delete" size={28} color='white' />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>Room Code: {roomID}</Text>
+                <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
             </View>
-            <View style={styles.connectedPlayersContainer}>
+            <View style={globalStyles.connectedPlayersContainer}>
                 <Text>Middle: Current Players</Text>
             </View>
-            <View style={styles.calibrationContainer}>
+
+            <View style={globalStyles.calibrationContainer}>
                 <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text>
-                <View style={styles.calibrateRows}>
-                    <TouchableOpacity style={[styles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
+                <View style={globalStyles.calibrateRows}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
                         <Text>Top Left</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
                         <Text>Top Right</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.calibrateRows}>
-                    <TouchableOpacity style={[styles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
+                <View style={globalStyles.calibrateRows}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
                         <Text>Bottom Left</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
                         <Text>Bottom Right</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            
         </View>
     )
 }
