@@ -5,9 +5,16 @@ import { Text, View } from '../components/Themed';
 
 import { useNavigation } from '@react-navigation/native';
 import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
-import { Ionicons } from '@expo/vector-icons';
-// import {Ionicons} from 'react-native-vector-icons';
+
+
+// import { Ionicons } from '@expo/vector-icons';
+// import Ionicons from 'react-native-vector-icons';
+import {MaterialIcon} from '../components/Icon';
 import { Icon } from 'react-native-elements';
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
@@ -177,9 +184,13 @@ export default function HostSetup() {
         <View style={globalStyles.screenContainer}>
             <View style={globalStyles.headerContainer}>
                 <TouchableOpacity style={globalStyles.backButton}>
+                  
                     {/* <MaterialIcons name="delete" size={28} color='white' /> */}
-                    {/* <Ionicons name="arrow-back" size={28} color='white' /> */}
-                    <Icon name="rowing"/>
+                    <Ionicons name="arrow-back" size={28} color='white' />
+                    {/* <Icon name="rowing"/> */}
+                    {/* <MaterialIcon name="arrow-left" size={"large"} color='white' /> */}
+                    <MIcon name={'arrow-left'} size={28} color={"white"} />
+
                 </TouchableOpacity>
                 <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
             </View>
@@ -188,7 +199,7 @@ export default function HostSetup() {
             </View>
 
             <View style={globalStyles.calibrationContainer}>
-                <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text>
+                {/* <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text> */}
                 <View style={globalStyles.calibrateRows}>
                     <TouchableOpacity style={[globalStyles.calibrationButtons, 
                         { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
