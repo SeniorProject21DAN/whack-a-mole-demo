@@ -5,7 +5,9 @@ import { Text, View } from '../components/Themed';
 
 import { useNavigation } from '@react-navigation/native';
 import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+// import {Ionicons} from 'react-native-vector-icons';
+import { Icon } from 'react-native-elements';
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
@@ -175,7 +177,9 @@ export default function HostSetup() {
         <View style={globalStyles.screenContainer}>
             <View style={globalStyles.headerContainer}>
                 <TouchableOpacity style={globalStyles.backButton}>
-                    <MaterialIcons name="delete" size={28} color='white' />
+                    {/* <MaterialIcons name="delete" size={28} color='white' /> */}
+                    {/* <Ionicons name="arrow-back" size={28} color='white' /> */}
+                    <Icon name="rowing"/>
                 </TouchableOpacity>
                 <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
             </View>
