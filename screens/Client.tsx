@@ -4,7 +4,9 @@ import { Text, View } from '../components/Themed';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
-import { globalStyles } from '../components/globalStyles'
+import { globalStyles } from '../components/globalStyles';
+import { DeviceMotion } from 'expo-sensors';
+import { Subscription } from 'expo-modules-core';
 
 const BUTTON_MARGIN = 8;
 
@@ -24,7 +26,107 @@ export default function Client() {
         }
     }
 
+    let rotSub: Subscription | null = null;
 
+    const screenWidth = 150;
+    const screenHeight = 100;
+  
+    const [topLeft, setTopLeft] = useState([-2, 1]); //x: 0, y: 1
+    const [topRight, setTopRight] = useState([-1, 1]);
+    const [bottomLeft, setBottomLeft] = useState([-2, 0]);
+    const [bottomRight, setBottomRight] = useState([-1, 0]);
+  
+    const [top, _setTop] = useState(1);
+    const [bottom, _setBottom] = useState(0);
+    const [left, _setLeft] = useState(0);
+    const [right, _setRight] = useState(1);
+  
+    const [coord, _setCoord] = useState([0, 0])
+  
+    const topRef = React.useRef(top);
+    const bottomRef = React.useRef(bottom);
+    const leftRef = React.useRef(left);
+    const rightRef = React.useRef(right);
+    const coordRef = React.useRef(coord);
+  
+    const [whack, setWhack_] = React.useState(false);
+    const whackRef = React.useRef(whack);
+    const setWhack = (data: boolean) => {
+      whackRef.current = data;
+      setWhack_(data);
+    }
+  
+    const setTop = (data: number) => {
+      topRef.current = data;
+      _setTop(data)
+    }
+    const setBottom = (data: number) => {
+      bottomRef.current = data;
+      _setBottom(data)
+    }
+    const setLeft = (data: number) => {
+      leftRef.current = data;
+      _setLeft(data)
+    }
+    const setRight = (data: number) => {
+      rightRef.current = data;
+      _setRight(data)
+    }
+    const setCoord = (data: number[]) => {
+      coordRef.current = data;
+      _setCoord(data);
+    }
+  
+    const _subscribe = () => {
+      rotSub = DeviceMotion.addListener(data => {
+        
+        setCoord([((-data.rotation.alpha + leftRef.current) / (leftRef.current - rightRef.current))
+          * screenWidth, ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current))
+        * screenHeight]); //height of quad
+        
+        if (whackRef.current) {
+            setWhack(false);
+        }
+      });
+    };
+  
+    const _unsubscribe = () => {
+      // subscription && subscription.remove();
+      rotSub?.remove();
+    };
+  
+    const _setTopLeft = () => {
+      let cornerSub = DeviceMotion.addListener(rotData => {
+        setTopLeft([rotData.rotation.alpha, rotData.rotation.beta]);
+        setTop((rotData.rotation.beta + topRight[1]) / 2);
+        setLeft((rotData.rotation.alpha + bottomLeft[0]) / 2);
+        cornerSub?.remove();
+      });
+    }
+    const _setTopRight = () => {
+      let cornerSub = DeviceMotion.addListener(rotData => {
+        setTopRight([rotData.rotation.alpha, rotData.rotation.beta]);
+        setTop((topLeft[1] + rotData.rotation.beta) / 2);
+        setRight((rotData.rotation.alpha + bottomRight[0]) / 2);
+        cornerSub?.remove();
+      });
+    }
+    const _setBottomLeft = () => {
+      let cornerSub = DeviceMotion.addListener(rotData => {
+        setBottomLeft([rotData.rotation.alpha, rotData.rotation.beta]);
+        setBottom((rotData.rotation.beta + bottomRight[1]) / 2);
+        setLeft((topLeft[0] + rotData.rotation.alpha) / 2);
+        cornerSub?.remove();
+      });
+    }
+    const _setBottomRight = () => {
+      let cornerSub = DeviceMotion.addListener(rotData => {
+        setBottomRight([rotData.rotation.alpha, rotData.rotation.beta]);
+        setBottom((bottomLeft[1] + rotData.rotation.beta) / 2);
+        setRight((topRight[0] + rotData.rotation.alpha) / 2);
+        cornerSub?.remove();
+      });
+    }
 
     React.useEffect(() => {
         const serverMessagesList = [];
@@ -33,8 +135,11 @@ export default function Client() {
             // ws.send("s:h:" + roomID);
             // setServerState('Connected to the server')
             // setDisableButton(false);
+            _subscribe();
+            DeviceMotion.setUpdateInterval(100);
         };
         ws.onclose = (e) => {
+            _unsubscribe();
             // setServerState('Disconnected. Check internet or server.')
             // setDisableButton(true);
         };
@@ -46,6 +151,8 @@ export default function Client() {
             // serverMessagesList.push(e.data);
             // setServerMessages([...serverMessagesList])
         };
+
+        return () => _unsubscribe();
     }, [])
     const submitMessage = () => {
         // ws.send();
@@ -67,18 +174,26 @@ export default function Client() {
             <View style={globalStyles.calibrationContainer}>
                 <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text>
                 <View style={globalStyles.calibrateRows}>
-                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, 
+                        { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
+                        onPress={_setTopLeft}>
                         <Text>Top Left</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, 
+                        { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
+                        onPress={_setTopRight}>
                         <Text>Top Right</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={globalStyles.calibrateRows}>
-                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, 
+                        { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
+                        onPress={_setBottomLeft}>
                         <Text>Bottom Left</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[globalStyles.calibrationButtons, { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}>
+                    <TouchableOpacity style={[globalStyles.calibrationButtons, 
+                        { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
+                        onPress={_setBottomRight}>
                         <Text>Bottom Right</Text>
                     </TouchableOpacity>
                 </View>
