@@ -22,24 +22,25 @@ import { Subscription } from 'expo-modules-core';
 const LENGTH = 5; // Length of the Room ID
 const BUTTON_MARGIN = 8;
 
-export default function HostSetup() {
-    const navigation = useNavigation();
-
-    const generateID = () => {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < LENGTH; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
+const generateID = () => {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < LENGTH; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
+    return result;
+}
+var roomID = generateID();
+console.log(roomID);
 
-    var ws = React.useRef(new WebSocket('ws:153.106.227.243:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
-    var roomID = generateID();
-    console.log(roomID);
 
+export default function HostSetup() {
+  const navigation = useNavigation();
+
+    
+    var ws = React.useRef(new WebSocket('ws:153.106.226.71:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
     let rotSub: Subscription | null = null;
 
     const screenWidth = 150;
@@ -147,6 +148,7 @@ export default function HostSetup() {
         ws.onopen = () => {
             // console.log("Connection Attempt.");
             ws.send("s:h:" + roomID);
+            console.log("Connected!");
             // setServerState('Connected to the server')
             // setDisableButton(false);
             _subscribe();
@@ -186,10 +188,10 @@ export default function HostSetup() {
                 <TouchableOpacity style={globalStyles.backButton}>
                   
                     {/* <MaterialIcons name="delete" size={28} color='white' /> */}
-                    <Ionicons name="arrow-back" size={28} color='white' />
+                    {/* <Ionicons name="arrow-back" size={28} color='white' /> */}
                     {/* <Icon name="rowing"/> */}
                     {/* <MaterialIcon name="arrow-left" size={"large"} color='white' /> */}
-                    <MIcon name={'arrow-left'} size={28} color={"white"} />
+                    {/* <MIcon name={'arrow-left'} size={28} color={"white"} /> */}
 
                 </TouchableOpacity>
                 <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
