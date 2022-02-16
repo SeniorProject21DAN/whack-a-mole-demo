@@ -28,6 +28,9 @@ export default function Client() {
     if (ws.OPEN) {
       console.log(roomID);
       ws.send("s:c:" + roomID);     //Need to add more connections work in the server so that nicknames are an options
+      
+      _subscribe();
+      DeviceMotion.setUpdateInterval(100);
     }
   }
 
@@ -92,6 +95,8 @@ export default function Client() {
       if (whackRef.current) {
         setWhack(false);
       }
+
+      ws.send("m:" + coord + ":" + whack);    //Send messages
     });
   };
 
@@ -138,14 +143,11 @@ export default function Client() {
     ws.onopen = () => {
       // console.log("Connection Attempt.");
       // ws.send("s:h:" + roomID);
-      // setServerState('Connected to the server')
       // setDisableButton(false);
-      _subscribe();
-      DeviceMotion.setUpdateInterval(100);
+
     };
     ws.onclose = (e) => {
       _unsubscribe();
-      // setServerState('Disconnected. Check internet or server.')
       // setDisableButton(true);
     };
     ws.onerror = (e) => {
@@ -153,8 +155,6 @@ export default function Client() {
     };
     ws.onmessage = (e) => {
       console.log(e);
-      // serverMessagesList.push(e.data);
-      // setServerMessages([...serverMessagesList])
     };
 
     return () => _unsubscribe();
