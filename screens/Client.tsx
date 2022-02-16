@@ -96,7 +96,7 @@ export default function Client() {
         setWhack(false);
       }
 
-      ws.send("m:" + coord + ":" + whack);    //Send messages
+      ws.send("m:" + coordRef.current + ":" + whack);    //Send messages
     });
   };
 
