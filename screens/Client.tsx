@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { ImagePickerIOS, StyleSheet, TouchableOpacity, TextInput, Button } from 'react-native';
 import { Text, View } from '../components/Themed';
-import { MaterialIcons } from '@expo/vector-icons';
+// import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 
 const BUTTON_MARGIN = 8;
 
@@ -28,7 +32,7 @@ export default function Client() {
     if (ws.OPEN) {
       console.log(roomID);
       ws.send("s:c:" + roomID);     //Need to add more connections work in the server so that nicknames are an options
-      
+
       _subscribe();
       DeviceMotion.setUpdateInterval(100);
     }
@@ -169,12 +173,16 @@ export default function Client() {
     <View style={globalStyles.screenContainer}>
       <View style={styles.headerContainer}>
         {/* <Text style={styles.headerText}>Top: Room Code</Text> */}
-        <TouchableOpacity>
-          {/* <MaterialIcons name="arrow-back" size={28} color='white' /> */}
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Ionicons name="arrow-back" size={28} color='white' />
         </TouchableOpacity>
-        <TextInput style={styles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
-        <TextInput style={styles.textInput} placeholder='Nickname (Not Yet Implemented)' />
-        <Button color="darkgrey" title="connect" onPress={Connect} />
+
+        <View style={styles.headerInput}>
+          <TextInput style={styles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
+          <TextInput style={styles.textInput} placeholder='Nickname (Not Yet Implemented)' />
+
+          <Button color="darkgrey" title="connect" onPress={Connect} />
+        </View>
       </View>
       <View style={globalStyles.calibrationContainer}>
         <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text>
@@ -183,6 +191,9 @@ export default function Client() {
           { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
             onPress={_setTopLeft}>
             <Text>Top Left</Text>
+
+            <MaterialIcons name='arrow-left' size={28} color='white' />
+
           </TouchableOpacity>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
@@ -214,7 +225,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     // marginTop: 10,
-
+    flexDirection: "row",
   },
   connectedPlayersContainer: {
     flex: 3,
@@ -246,4 +257,12 @@ const styles = StyleSheet.create({
   connectButton: {
 
   },
+  headerInput: {
+    flexDirection: "column",
+    borderRadius: 10,
+    // margin: 4,
+    // alignSelf: "stretch",
+    justifyContent: "space-evenly",
+    // alignItems: "center"
+  }
 });
