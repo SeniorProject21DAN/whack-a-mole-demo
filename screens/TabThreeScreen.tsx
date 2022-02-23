@@ -24,7 +24,7 @@ export default function TabThreeScreen({ route, navigation }: RootTabScreenProps
 
 	const _subscribe = async () => {
 		accSub = DeviceMotion.addListener(async (data) => {
-			console.log(await Location.getCurrentPositionAsync({}));
+			console.log(await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest }));
 		});
 		//locSub = await Location.watchPositionAsync({timeInterval: 100, accuracy: 3, mayShowUserSettingsDialog: true}, updateLocation);
 	}
