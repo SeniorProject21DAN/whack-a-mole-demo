@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ImagePickerIOS, StyleSheet, TouchableOpacity, TextInput, Button } from 'react-native';
 import { Text, View } from '../components/Themed';
-// import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
 import { globalStyles } from '../components/globalStyles';
@@ -17,22 +16,17 @@ const BUTTON_MARGIN = 8;
 
 export default function Client() {
   const [roomID, onChangeText] = React.useState("");
+  const [nickName, onNickname] = React.useState("");
 
 
   const navigation = useNavigation();
   // var roomID = "";
-  var nickName = "";
   var ws = React.useRef(new WebSocket('ws:153.106.226.71:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
-
-  const Placeholder = () => {
-
-  }
 
   const Connect = () => {
     if (ws.OPEN) {
       console.log(roomID);
-      ws.send("s:c:" + roomID);     //Need to add more connections work in the server so that nicknames are an options
-
+      ws.send("s:c:" + roomID + ":" + nickName);
       _subscribe();
       DeviceMotion.setUpdateInterval(100);
     }
@@ -146,16 +140,12 @@ export default function Client() {
     const serverMessagesList = [];
     ws.onopen = () => {
       // console.log("Connection Attempt.");
-      // ws.send("s:h:" + roomID);
-      // setDisableButton(false);
 
     };
     ws.onclose = (e) => {
       _unsubscribe();
-      // setDisableButton(true);
     };
     ws.onerror = (e) => {
-      // setServerState(e.message);
     };
     ws.onmessage = (e) => {
       console.log(e);
@@ -163,11 +153,6 @@ export default function Client() {
 
     return () => _unsubscribe();
   }, [])
-  const submitMessage = () => {
-    // ws.send();
-    // setMessageText('')
-    // setInputFieldEmpty(true)
-  }
 
   return (
     <View style={globalStyles.screenContainer}>
@@ -179,7 +164,7 @@ export default function Client() {
 
         <View style={styles.headerInput}>
           <TextInput style={styles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
-          <TextInput style={styles.textInput} placeholder='Nickname (Not Yet Implemented)' />
+          <TextInput style={styles.textInput} placeholder='Nickname' onChangeText={onNickname} />
 
           <Button color="darkgrey" title="connect" onPress={Connect} />
         </View>
