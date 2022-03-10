@@ -35,6 +35,12 @@ export default function HostSetup() {
 
   const [players, setPlayers] = useState([
     { text: "Host", key: "1" },
+    { text: "Example1", key: "2" },
+    { text: "Example2", key: "3" },
+    { text: "Example3", key: "4" },
+    { text: "Example4", key: "5" },
+    { text: "Example5", key: "6" },
+    { text: "Example6", key: "7" },
   ]);
 
 
@@ -158,7 +164,7 @@ export default function HostSetup() {
     ws.onmessage = (e) => {
       // console.log(e);
       const messageArray = e.data.split(":");
-      if (!players.includes(messageArray[0])){
+      if (!players.includes(messageArray[0])) {
         newPlayerHandler(messageArray[0]);
       } else if (messageArray[1] == "CLOSED") {
         removePlayerHandler(messageArray[0]);
@@ -195,10 +201,12 @@ export default function HostSetup() {
         </TouchableOpacity>
         <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
       </View>
-      <View style={globalStyles.connectedPlayersContainer}>
+      <View style={styles.connectedPlayersContainer}>
         {/* <Text>Middle: Current Players</Text> */}
-        <FlatList data={players} renderItem={({ item }) => (
-          <Text>{item.text}</Text>
+        <FlatList numColumns={3} data={players} renderItem={({ item }) => (
+          <View style={styles.playersListItems}>
+            <Text style={styles.playersListText}>{item.text}</Text>
+          </View>
         )} />
       </View>
 
@@ -250,8 +258,11 @@ const styles = StyleSheet.create({
   },
   connectedPlayersContainer: {
     flex: 3,
+    flexDirection: "row",
+    flexWrap: "wrap",
     backgroundColor: "lightgreen",
     alignItems: "center",
+    
   },
   calibrationContainer: {
     flex: 3,
@@ -289,5 +300,15 @@ const styles = StyleSheet.create({
   },
   sidesText: {
 
-  }
+  },
+  playersListItems: {
+    backgroundColor: "pink",
+    margin: 5,
+    borderRadius: 6,
+    alignSelf: "stretch",
+  },
+  playersListText: {
+    margin: 10,
+    
+  },
 });
