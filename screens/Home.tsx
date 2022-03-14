@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, ImagePickerIOS, StyleSheet, TouchableOpacity } from 'react-native';
+import { globalStyles } from '../components/globalStyles';
 
 // import { Text, View } from '../components/Themed';
 
@@ -14,19 +15,19 @@ export default function Home() {
     return (
         <View style={{ flex: 1, alignSelf: "stretch", justifyContent: "space-evenly" }}>
             {/* Header-ish */}
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Whack-A-Mole!</Text>
+            <View style={globalStyles.headerContainer}>
+                <Text style={globalStyles.headerText}>Whack-A-Mole!</Text>
             </View>
             {/* Two "buttons." Full screen (minus the header) sides for host and client.*/}
-            <View style={styles.sidesContainer}>
-                <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("Host")}>
-                    <View style={ [styles.buttonContent, {backgroundColor: "lightblue"}]  }>
-                        <Text style={styles.sidesText}>Host</Text>
+            <View style={globalStyles.sidesContainer}>
+                <TouchableOpacity style={globalStyles.buttons} onPress={() => navigation.navigate("Host")}>
+                    <View style={ [globalStyles.buttonContent, {backgroundColor: "#5CB8B1"}]  }>
+                        <Text style={globalStyles.headerText}>Host</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate("Client")}>
-                    <View style={ [styles.buttonContent, {backgroundColor: "lightgreen"}]  }>
-                        <Text style={styles.sidesText}>Client</Text>
+                <TouchableOpacity style={globalStyles.buttons} onPress={() => navigation.navigate("Client")}>
+                    <View style={ [globalStyles.buttonContent, {backgroundColor: "#51FCC9"}]  }>
+                        <Text style={globalStyles.headerText}>Client</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -45,12 +46,6 @@ const styles = StyleSheet.create({
         flex: 2,
         alignSelf: "stretch",
         flexDirection: "row",
-    },
-    headerText: {
-        fontSize: 18,
-    },
-    sidesText: {
-        fontSize: 18,
     },
     buttons: {
         flex: 1

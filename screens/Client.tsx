@@ -6,8 +6,6 @@ import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/Tr
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
@@ -140,7 +138,6 @@ export default function Client() {
     const serverMessagesList = [];
     ws.onopen = () => {
       // console.log("Connection Attempt.");
-
     };
     ws.onclose = (e) => {
       _unsubscribe();
@@ -156,15 +153,15 @@ export default function Client() {
 
   return (
     <View style={globalStyles.screenContainer}>
-      <View style={styles.headerContainer}>
-        {/* <Text style={styles.headerText}>Top: Room Code</Text> */}
+      <View style={globalStyles.headerContainer}>
+        {/* <Text style={globalStyles.headerText}>Top: Room Code</Text> */}
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Ionicons name="arrow-back" size={28} color='white' />
+          <MaterialIcons name="arrow-back" size={28} color='white' />
         </TouchableOpacity>
 
-        <View style={styles.headerSubContainer}>
-          <TextInput style={styles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
-          <TextInput style={styles.textInput} placeholder='Nickname' onChangeText={onNickname} />
+        <View style={globalStyles.headerSubContainer}>
+          <TextInput style={globalStyles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
+          <TextInput style={globalStyles.textInput} placeholder='Nickname' onChangeText={onNickname} />
 
           <Button color="darkgrey" title="connect" onPress={Connect} />
         </View>
@@ -175,37 +172,28 @@ export default function Client() {
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
             onPress={_setTopLeft}>
-            <View style={styles.iconStyle}>
-              {/* <Text>Top Left</Text> */}
-              <MaterialIcons name='north-west' size={50} color='white' />
-            </View>
-
+            {/* <Text>Top Left</Text> */}
+            <MaterialIcons name='north-west' size={50} color='white' />
           </TouchableOpacity>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
             onPress={_setTopRight}>
-            <View style={styles.iconStyle}>
-              {/* <Text>Top Right</Text> */}
-              <MaterialIcons name='north-east' size={50} color='white' />
-            </View>
+            {/* <Text>Top Right</Text> */}
+            <MaterialIcons name='north-east' size={50} color='white' />
           </TouchableOpacity>
         </View>
         <View style={globalStyles.calibrateRows}>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
             onPress={_setBottomLeft}>
-            <View style={styles.iconStyle}>
-              {/* <Text>Bottom Left</Text> */}
-              <MaterialIcons name='south-west' size={50} color='white' />
-            </View>
+            {/* <Text>Bottom Left</Text> */}
+            <MaterialIcons name='south-west' size={50} color='white' />
           </TouchableOpacity>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
             onPress={_setBottomRight}>
-            <View style={styles.iconStyle}>
-              {/* <Text>Bottom Right</Text> */}
-              <MaterialIcons name='south-east' size={50} color='white' />
-            </View>
+            {/* <Text>Bottom Right</Text> */}
+            <MaterialIcons name='south-east' size={50} color='white' />
           </TouchableOpacity>
         </View>
       </View>
@@ -213,11 +201,13 @@ export default function Client() {
   )
 }
 
+// No longer used, can be deleted in the future
 const styles = StyleSheet.create({
   calibrationContainer: {
     flex: 3,
     backgroundColor: "lightblue",
-    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "space-evenly"
   },
   headerText: {
 
@@ -249,15 +239,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 2,
     backgroundColor: "brown",
-
-    // margin: 4,
     alignSelf: "stretch",
     justifyContent: "space-evenly",
     alignItems: "center"
   },
   iconStyle: {
     flex: 1,
+    flexDirection: "column",
     backgroundColor: "purple",
-    
-  }
+  },
 });

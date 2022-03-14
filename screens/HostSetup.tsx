@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ImagePickerIOS, StyleSheet, TouchableOpacity } from 'react-native';
-
 import { Text, View } from '../components/Themed';
-
 import { useNavigation } from '@react-navigation/native';
 import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
 import { FlatList } from 'react-native-gesture-handler';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const LENGTH = 5; // Length of the Room ID
 const BUTTON_MARGIN = 8;
@@ -28,8 +24,6 @@ const generateID = () => {
 var roomID = generateID();
 console.log(roomID);
 
-
-
 export default function HostSetup() {
   const navigation = useNavigation();
 
@@ -42,7 +36,6 @@ export default function HostSetup() {
     { text: "Example5", key: "6" },
     { text: "Example6", key: "7" },
   ]);
-
 
   var ws = React.useRef(new WebSocket('ws:153.106.226.71:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
   let rotSub: Subscription | null = null;
@@ -197,18 +190,18 @@ export default function HostSetup() {
     <View style={globalStyles.screenContainer}>
       <View style={globalStyles.headerContainer}>
         <TouchableOpacity style={globalStyles.backButton} onPress={() => navigation.navigate("Home")}>
-          <Ionicons name="arrow-back" size={28} color='white' />
+          <MaterialIcons name='arrow-back' size={28} color='white' />
         </TouchableOpacity>
         <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
         <TouchableOpacity style={globalStyles.backButton}>
-          <Ionicons name="tv" size={28} color='white' />
+          <MaterialIcons name='cast' size={28} color='white' />
         </TouchableOpacity>
       </View>
-      <View style={styles.connectedPlayersContainer}>
+      <View style={globalStyles.connectedPlayersContainer}>
         {/* <Text>Middle: Current Players</Text> */}
         <FlatList numColumns={3} data={players} renderItem={({ item }) => (
-          <View style={styles.playersListItems}>
-            <Text style={styles.playersListText}>{item.text}</Text>
+          <View style={globalStyles.playersListItems}>
+            <Text style={globalStyles.playersListText}>{item.text}</Text>
           </View>
         )} />
       </View>
@@ -219,24 +212,28 @@ export default function HostSetup() {
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
             onPress={_setTopLeft}>
-            <Text>Top Left</Text>
+            {/* <Text>Top Left</Text> */}
+            <MaterialIcons name='north-west' size={50} color='white' />
           </TouchableOpacity>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
             onPress={_setTopRight}>
-            <Text>Top Right</Text>
+            {/* <Text>Top Right</Text> */}
+            <MaterialIcons name='north-east' size={50} color='white' />
           </TouchableOpacity>
         </View>
         <View style={globalStyles.calibrateRows}>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
             onPress={_setBottomLeft}>
-            <Text>Bottom Left</Text>
+            {/* <Text>Bottom Left</Text> */}
+            <MaterialIcons name='south-west' size={50} color='white' />
           </TouchableOpacity>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
             onPress={_setBottomRight}>
-            <Text>Bottom Right</Text>
+            {/* <Text>Bottom Right</Text> */}
+            <MaterialIcons name='south-east' size={50} color='white' />
           </TouchableOpacity>
         </View>
       </View>
@@ -265,7 +262,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     backgroundColor: "lightgreen",
     alignItems: "center",
-    
+
   },
   calibrationContainer: {
     flex: 3,
@@ -315,6 +312,5 @@ const styles = StyleSheet.create({
   },
   playersListText: {
     margin: 10,
-    
   },
 });
