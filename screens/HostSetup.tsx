@@ -200,6 +200,9 @@ export default function HostSetup() {
           <Ionicons name="arrow-back" size={28} color='white' />
         </TouchableOpacity>
         <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
+        <TouchableOpacity style={globalStyles.backButton}>
+          <Ionicons name="tv" size={28} color='white' />
+        </TouchableOpacity>
       </View>
       <View style={styles.connectedPlayersContainer}>
         {/* <Text>Middle: Current Players</Text> */}
@@ -303,9 +306,12 @@ const styles = StyleSheet.create({
   },
   playersListItems: {
     backgroundColor: "pink",
-    margin: 5,
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 6,
-    alignSelf: "stretch",
+    height: 55,
+    margin: 5,
+    flex: 1
   },
   playersListText: {
     margin: 10,

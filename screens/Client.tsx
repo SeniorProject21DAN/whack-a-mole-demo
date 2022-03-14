@@ -162,7 +162,7 @@ export default function Client() {
           <Ionicons name="arrow-back" size={28} color='white' />
         </TouchableOpacity>
 
-        <View style={styles.headerInput}>
+        <View style={styles.headerSubContainer}>
           <TextInput style={styles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
           <TextInput style={styles.textInput} placeholder='Nickname' onChangeText={onNickname} />
 
@@ -170,32 +170,42 @@ export default function Client() {
         </View>
       </View>
       <View style={globalStyles.calibrationContainer}>
-        <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text>
+        {/* <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text> */}
         <View style={globalStyles.calibrateRows}>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
             onPress={_setTopLeft}>
-            <Text>Top Left</Text>
-
-            <MaterialIcons name='arrow-left' size={28} color='white' />
+            <View style={styles.iconStyle}>
+              {/* <Text>Top Left</Text> */}
+              <MaterialIcons name='north-west' size={50} color='white' />
+            </View>
 
           </TouchableOpacity>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
             onPress={_setTopRight}>
-            <Text>Top Right</Text>
+            <View style={styles.iconStyle}>
+              {/* <Text>Top Right</Text> */}
+              <MaterialIcons name='north-east' size={50} color='white' />
+            </View>
           </TouchableOpacity>
         </View>
         <View style={globalStyles.calibrateRows}>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
             onPress={_setBottomLeft}>
-            <Text>Bottom Left</Text>
+            <View style={styles.iconStyle}>
+              {/* <Text>Bottom Left</Text> */}
+              <MaterialIcons name='south-west' size={50} color='white' />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
             onPress={_setBottomRight}>
-            <Text>Bottom Right</Text>
+            <View style={styles.iconStyle}>
+              {/* <Text>Bottom Right</Text> */}
+              <MaterialIcons name='south-east' size={50} color='white' />
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -204,26 +214,10 @@ export default function Client() {
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 1,
-    backgroundColor: "brown",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    // marginTop: 10,
-    flexDirection: "row",
-  },
-  connectedPlayersContainer: {
-    flex: 3,
-    backgroundColor: "lightgreen",
-    alignItems: "center",
-  },
   calibrationContainer: {
     flex: 3,
     backgroundColor: "lightblue",
     alignItems: "center",
-  },
-  backButton: {
-
   },
   headerText: {
 
@@ -231,23 +225,39 @@ const styles = StyleSheet.create({
   sidesText: {
 
   },
-  textInput: {
-    margin: 4,
-    marginHorizontal: 20,
-    backgroundColor: "white",
-    color: "black",
-    alignSelf: "stretch",
-    borderRadius: 10,
-  },
-  connectButton: {
+  backButton: {
 
   },
-  headerInput: {
-    flexDirection: "column",
-    borderRadius: 10,
-    // margin: 4,
-    // alignSelf: "stretch",
+  headerContainer: {
+    flex: 1,
+    backgroundColor: "brown",
+    alignItems: "center",
     justifyContent: "space-evenly",
-    // alignItems: "center"
+    flexDirection: "row",
+  },
+  textInput: {
+    flexDirection: "row",
+    padding: 4,
+    paddingHorizontal: "25%",
+    backgroundColor: "white",
+    alignSelf: "stretch",
+    textAlign: "center",
+    borderRadius: 5,
+  },
+  headerSubContainer: {
+    flexDirection: "column",
+    borderRadius: 5,
+    padding: 2,
+    backgroundColor: "brown",
+
+    // margin: 4,
+    alignSelf: "stretch",
+    justifyContent: "space-evenly",
+    alignItems: "center"
+  },
+  iconStyle: {
+    flex: 1,
+    backgroundColor: "purple",
+    
   }
 });
