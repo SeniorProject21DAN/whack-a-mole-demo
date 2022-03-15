@@ -19,7 +19,7 @@ export default function Client() {
 
   const navigation = useNavigation();
   // var roomID = "";
-  var ws = React.useRef(new WebSocket('ws:153.106.226.71:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
+  var ws = React.useRef(new WebSocket('ws://192.168.1.15:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
@@ -32,8 +32,8 @@ export default function Client() {
 
   let rotSub: Subscription | null = null;
 
-  const screenWidth = 150;
-  const screenHeight = 100;
+  const screenWidth = 1;
+  const screenHeight = 1;
 
   const [topLeft, setTopLeft] = useState([-2, 1]); //x: 0, y: 1
   const [topRight, setTopRight] = useState([-1, 1]);
@@ -137,12 +137,14 @@ export default function Client() {
   React.useEffect(() => {
     const serverMessagesList = [];
     ws.onopen = () => {
-      // console.log("Connection Attempt.");
+      console.log("Connection Attempt.");
     };
     ws.onclose = (e) => {
       _unsubscribe();
+      console.log(e);
     };
     ws.onerror = (e) => {
+      console.log(e);
     };
     ws.onmessage = (e) => {
       console.log(e);
@@ -155,7 +157,7 @@ export default function Client() {
     <View style={globalStyles.screenContainer}>
       <View style={globalStyles.headerContainer}>
         {/* <Text style={globalStyles.headerText}>Top: Room Code</Text> */}
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home" as any)}>
           <MaterialIcons name="arrow-back" size={28} color='white' />
         </TouchableOpacity>
 
