@@ -6,8 +6,10 @@
         {
           "iosReceiverAppId": "4E6CB52E",
           "androidReceiverAppId": "4E6CB52E"
+
         }
       ]
+        
     ],
     "name": "whack-a-mole-demo",
     "slug": "whack-a-mole-demo",
@@ -34,7 +36,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.straij.whackamoledemo"
     },
     "androidNavigationBar": {
       "visible": "immersive"
