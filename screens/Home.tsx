@@ -20,11 +20,11 @@ export default function Home() {
             </View>
             {/* Two "buttons." Full screen (minus the header) sides for host and client.*/}
             <View style={globalStyles.sidesContainer}>
-                <TouchableOpacity style={globalStyles.buttons} onPress={() => navigation.navigate("Host")}>
+                {/* <TouchableOpacity style={globalStyles.buttons} onPress={() => navigation.navigate("Host")}>
                     <View style={ [globalStyles.buttonContent, {backgroundColor: "#5CB8B1"}]  }>
                         <Text style={globalStyles.headerText}>Host</Text>
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={globalStyles.buttons} onPress={() => navigation.navigate("Client")}>
                     <View style={ [globalStyles.buttonContent, {backgroundColor: "#51FCC9"}]  }>
                         <Text style={globalStyles.headerText}>Client</Text>

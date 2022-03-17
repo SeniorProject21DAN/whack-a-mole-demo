@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { ImagePickerIOS, StyleSheet, TouchableOpacity, TextInput, Button } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
-import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
 
 
 const BUTTON_MARGIN = 8;
