@@ -6,7 +6,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
@@ -18,13 +18,27 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from '../screens/Home';
+import Client from '../screens/Client';
+import HostSetup from '../screens/HostSetup';
+
+const Stack = createStackNavigator();
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
+    // <NavigationContainer
+    //   linking={LinkingConfiguration}
+    //   theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    //   <RootNavigator />
+    // </NavigationContainer>
+
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
+        <Stack.Screen name="Host" component={HostSetup} options={{headerShown: false}}/>
+        <Stack.Screen name="Client" component={Client} options={{headerShown: false}}/>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
@@ -33,7 +47,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>();
+// const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
@@ -53,9 +67,9 @@ function RootNavigator() {
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
+
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"

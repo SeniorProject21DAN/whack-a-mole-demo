@@ -27,7 +27,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     firebase.default.initializeApp(firebaseConfig);
   }
 
-  let ws = React.useRef(new WebSocket('ws:153.106.226.103:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
+  let ws = React.useRef(new WebSocket('ws:153.106.226.71:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const [rotData, setRotData] = useState({
     alpha: 0,
