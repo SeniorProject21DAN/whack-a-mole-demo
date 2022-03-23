@@ -41,7 +41,7 @@ export const globalStyles = StyleSheet.create({
     },
     calibrationContainer: {
         flex: 3,
-        backgroundColor: TERTIARY_COLOR,
+        backgroundColor: FOURTH_COLOR,
         flexDirection: "column",
         justifyContent: "space-evenly"
     },
@@ -55,7 +55,8 @@ export const globalStyles = StyleSheet.create({
         flexDirection: "row",
         borderRadius: 4,
         backgroundColor: FIFTH_COLOR,
-        alignSelf: "stretch",
+        // alignSelf: "stretch",
+        // alignContent: "center",
         alignItems: "center",
         margin: 20,
         paddingStart: "15%"
@@ -111,6 +112,22 @@ export const globalStyles = StyleSheet.create({
     },
     buttonContent: {
         flex: 1,
-        alignItems: "center"
+        alignItems: "center",
+    },
+    calibrationButtonExtra: {
+        backgroundColor: TERTIARY_COLOR,
+        position: "absolute",
+        alignSelf: "center",
+        alignContent: "center",
+        padding: "3%",
+        zIndex: 1,
+        top: "43%",
+        borderRadius: 30,
+    },
+    controllerContainer: {
+        flex: 5,
+        backgroundColor: FOURTH_COLOR,
+        flexDirection: "column",
+        justifyContent: "space-evenly"
     },
 });

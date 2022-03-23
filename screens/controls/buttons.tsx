@@ -17,12 +17,12 @@ export default function ButtonScreen(){
         <View style={globalStyles.screenContainer}>
             <View style={globalStyles.headerContainer}>
                 {/* <Text style={globalStyles.headerText}>Top: Room Code</Text> */}
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Client")}>
                     <MaterialIcons name="arrow-back" size={28} color='white' />
                 </TouchableOpacity>
-                <Text>Game Screen with Buttons</Text>
+                <Text style={globalStyles.headerText}>Game Screen with Buttons</Text>
             </View>
-            <View>
+            <View style={globalStyles.controllerContainer}>
                 
             </View>
         </View>

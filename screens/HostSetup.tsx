@@ -21,8 +21,8 @@ const generateID = () => {
   }
   return result;
 }
-var roomID = generateID();
-console.log(roomID);
+// var roomID = generateID();
+// console.log(roomID);
 
 export default function HostSetup() {
   const navigation = useNavigation();

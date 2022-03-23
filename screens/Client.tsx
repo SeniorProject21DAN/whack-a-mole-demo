@@ -163,10 +163,12 @@ export default function Client() {
           <TextInput style={globalStyles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
           <TextInput style={globalStyles.textInput} placeholder='Nickname' onChangeText={onNickname} />
 
-          <Button color="darkgrey" title="connect" onPress={Connect} />
+          <Button color="#5CB8B1" title="connect" onPress={Connect} />
         </View>
       </View>
+
       <View style={globalStyles.calibrationContainer}>
+
         {/* <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text> */}
         <View style={globalStyles.calibrateRows}>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
@@ -182,6 +184,7 @@ export default function Client() {
             <MaterialIcons name='north-east' size={50} color='white' />
           </TouchableOpacity>
         </View>
+
         <View style={globalStyles.calibrateRows}>
           <TouchableOpacity style={[globalStyles.calibrationButtons,
           { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
@@ -196,6 +199,11 @@ export default function Client() {
             <MaterialIcons name='south-east' size={50} color='white' />
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={() => navigation.navigate("ButtonScreen")}>
+            <Text style = {{color: "white"}}>Ready!</Text>
+        </TouchableOpacity>
+
       </View>
     </View>
   )

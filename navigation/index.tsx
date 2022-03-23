@@ -22,6 +22,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/Home';
 import Client from '../screens/Client';
 import HostSetup from '../screens/HostSetup';
+import ButtonScreen from '../screens/controls/buttons';
+import TextScreen from '../screens/controls/textInput';
+import JoystickScreen from '../screens/controls/joystick';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +41,9 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
         <Stack.Screen name="Host" component={HostSetup} options={{headerShown: false}}/>
         <Stack.Screen name="Client" component={Client} options={{headerShown: false}}/>
+        <Stack.Screen name="ButtonScreen" component={ButtonScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="TextScreen" component={ButtonScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="JoystickScreen" component={ButtonScreen} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
