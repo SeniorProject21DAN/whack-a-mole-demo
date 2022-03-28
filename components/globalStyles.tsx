@@ -131,6 +131,12 @@ export const globalStyles = StyleSheet.create({
     controllerContainer: {
         flex: 5,
         backgroundColor: FOURTH_COLOR,
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
+    controllerContainerCol: {
+        flex: 1,
+        backgroundColor: FOURTH_COLOR,
         flexDirection: "column",
         justifyContent: "space-evenly"
     },
