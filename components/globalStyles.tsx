@@ -25,6 +25,10 @@ export const globalStyles = StyleSheet.create({
         justifyContent: "space-evenly",
         flexDirection: "row",
     },
+    homeHeaderContainer: {
+        flex: 1,
+        backgroundColor: PRIMARY_COLOR,
+    },
     headerText: {
         fontWeight: "bold",
         fontSize: 20,

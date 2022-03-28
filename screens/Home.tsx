@@ -15,11 +15,13 @@ export default function Home() {
     return (
         <View style={{ flex: 1, alignSelf: "stretch", justifyContent: "space-evenly" }}>
             {/* Header-ish */}
-            <View style={globalStyles.headerContainer}>
-                <Text style={globalStyles.headerText}>Motion Controller!</Text>
-                <TouchableOpacity style={globalStyles.backButton}>
-                    <MaterialIcons name='cast' size={28} color='white' />
-                </TouchableOpacity>
+            <View style={[globalStyles.homeHeaderContainer]}>
+                <View>
+                    <TouchableOpacity style={[globalStyles.backButton, {alignSelf: "flex-end"}]}>
+                        <MaterialIcons name='cast' size={28} color='white' />
+                    </TouchableOpacity>
+                    <Text style={[globalStyles.headerText, {padding: "15%"}]}>Motion Controller!</Text>
+                </View>
             </View>
             {/* Two "buttons." Full screen (minus the header) sides for host and client.*/}
             <View style={globalStyles.sidesContainer}>
