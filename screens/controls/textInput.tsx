@@ -23,7 +23,7 @@ export default function TextScreen(){
                 <Text style={globalStyles.headerText}>Game Screen for Text Input</Text>
             </View>
             <View style={globalStyles.controllerContainer}>
-                
+                <TextInput style={globalStyles.textInput} placeholder='Words'/>
             </View>
         </View>
     )
