@@ -16,6 +16,8 @@ export default function Client() {
   const [roomID, onChangeText] = React.useState("");
   const [nickName, onNickname] = React.useState("");
 
+  const [word, setWord] = React.useState("???");
+  const wordRef = React.useRef(word);
 
   const navigation = useNavigation();
   // var roomID = "";
@@ -140,6 +142,11 @@ export default function Client() {
     setWhack(false);
   }
 
+  const _setWord = (newWord: string) => {
+    setWord(newWord);
+    wordRef.current = newWord;
+  }
+
   React.useEffect(() => {
     const serverMessagesList = [];
     ws.onopen = () => {
@@ -154,6 +161,17 @@ export default function Client() {
     };
     ws.onmessage = (e) => {
       console.log(e);
+      if(e.data.indexOf(":") !== -1) {
+        let message = e.data.split(":")[2];
+        let type = message.split("=")[0];
+        let data = message.split("=")[1]
+        if(type === "artist") {
+
+        }
+        else if(type === "word") {
+          _setWord(data);
+        }
+      }
     };
 
     return () => _unsubscribe();
@@ -173,6 +191,11 @@ export default function Client() {
 
           <Button color="darkgrey" title="connect" onPress={Connect} />
         </View>
+      </View>
+      <View style={{backgroundColor: "#5CB8B1", display: 'flex', justifyContent: 'center', flexDirection: 'row'}}>
+        <Text style={{color: "white"}}>
+          Current Word: {wordRef.current}
+        </Text>
       </View>
       <View style={globalStyles.calibrationContainer}>
         {/* <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text> */}
