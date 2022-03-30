@@ -92,7 +92,9 @@ export default function Client() {
         setWhack(false);
       }
 
-      ws.send("m:" + coordRef.current + ":" + whack);    //Send messages
+      // ws.send("m:" + coordRef.current + ":" + whack);    //Send messages
+      ws.send("m:" + coordRef.current);    //Send messages
+
     });
   };
 
@@ -200,7 +202,7 @@ export default function Client() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={() => navigation.navigate("ButtonScreen")}>
+        <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={() => navigation.navigate("ButtonScreen", ws)}>
             <Text style = {{color: "white"}}>Ready!</Text>
         </TouchableOpacity>
 

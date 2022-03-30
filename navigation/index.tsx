@@ -42,8 +42,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         <Stack.Screen name="Host" component={HostSetup} options={{headerShown: false}}/>
         <Stack.Screen name="Client" component={Client} options={{headerShown: false}}/>
         <Stack.Screen name="ButtonScreen" component={ButtonScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="TextScreen" component={ButtonScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="JoystickScreen" component={ButtonScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="TextScreen" component={TextScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="JoystickScreen" component={JoystickScreen} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

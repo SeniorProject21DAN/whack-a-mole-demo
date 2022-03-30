@@ -6,9 +6,12 @@ import { globalStyles } from '../../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// Will need to be able to continue to talk to the websocket server and maintain the calibration data established in a previous screen. 
+// import RNGamePad from 'react-native-game-pad';
 
-export default function JoystickScreen(){
+// Will need to be able to continue to talk to the websocket server and maintain the calibration data established in a previous screen. 
+// Work in progress, will not be completed
+
+export default function JoystickScreen() {
 
 
     const navigation = useNavigation();
@@ -23,7 +26,11 @@ export default function JoystickScreen(){
                 <Text style={globalStyles.headerText}>Game Screen with a Joystick</Text>
             </View>
             <View style={globalStyles.controllerContainer}>
-                
+                <RNGamePad options={{
+                    size: 400,
+                    color: "blue",
+                    lockX: true
+                }} />
             </View>
         </View>
     )

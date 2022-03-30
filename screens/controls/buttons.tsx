@@ -9,99 +9,93 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { ButtonGroup } from 'react-native-elements';
 // Will need to be able to continue to talk to the websocket server and maintain the calibration data established in a previous screen. 
 
-const buttonDown = (buttonType: string) => {
-    switch (buttonType) {
-        case "A":
-            setButtons(previousState => {
-                return { ...previousState, A: true }
-            });
-            break;
-        case "B":
-            setButtons(previousState => {
-                return { ...previousState, B: true }
-            });
-            break;
-        case "X":
-            setButtons(previousState => {
-                return { ...previousState, X: true }
-            });
-            break;
-        case "Y":
-            setButtons(previousState => {
-                return { ...previousState, Y: true }
-            });
-            break;
-    }
-}
-
-const buttonUp = (buttonType: string) => {
-    switch (buttonType) {
-        case "A":
-            setButtons(previousState => {
-                return { ...previousState, A: false }
-            });
-            break;
-        case "B":
-            setButtons(previousState => {
-                return { ...previousState, B: false }
-            });
-            break;
-        case "X":
-            setButtons(previousState => {
-                return { ...previousState, X: false }
-            });
-            break;
-        case "Y":
-            setButtons(previousState => {
-                return { ...previousState, Y: false }
-            });
-            break;
-    }
-}
-
-const [buttons, setButtons] = useState({
-    A: false,
-    B: false,
-    X: false,
-    Y: false,
-});
 
 
-export default function ButtonScreen(version = "doubleButtonHor") {
+export default function ButtonScreen({route}) {
     const navigation = useNavigation();
     let buttonFormat;
 
-    version = "doubleButtonDia";
+    route.params.send("m:" + coordRef.current);
+
+    let version = "doubleButtonDia";
+    const buttonDown = (buttonType: string) => {
+        switch (buttonType) {
+            case "A":
+                setButtons(previousState => {
+                    return { ...previousState, A: true }
+                });
+                break;
+            case "B":
+                setButtons(previousState => {
+                    return { ...previousState, B: true }
+                });
+                break;
+            case "X":
+                setButtons(previousState => {
+                    return { ...previousState, X: true }
+                });
+                break;
+            case "Y":
+                setButtons(previousState => {
+                    return { ...previousState, Y: true }
+                });
+                break;
+        }
+    }
+
+    const buttonUp = (buttonType: string) => {
+        switch (buttonType) {
+            case "A":
+                setButtons(previousState => {
+                    return { ...previousState, A: false }
+                });
+                break;
+            case "B":
+                setButtons(previousState => {
+                    return { ...previousState, B: false }
+                });
+                break;
+            case "X":
+                setButtons(previousState => {
+                    return { ...previousState, X: false }
+                });
+                break;
+            case "Y":
+                setButtons(previousState => {
+                    return { ...previousState, Y: false }
+                });
+                break;
+        }
+    }
+
+    const [buttons, setButtons] = useState({
+        A: false,
+        B: false,
+        X: false,
+        Y: false,
+    });
 
     if (version === "doubleButtonHor") {
         buttonFormat = (
             <View style={globalStyles.controllerContainer}>
-                <Pressable onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")}>
-                    <TouchableOpacity style={style.buttons}>
-                        <Text style={style.buttonContent}>A</Text>
-                    </TouchableOpacity>
-                </Pressable>
-                <Pressable onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")}>
-                    <TouchableOpacity style={style.buttons}>
-                        <Text style={style.buttonContent}>B</Text>
-                    </TouchableOpacity>
-                </Pressable>
+                <TouchableOpacity onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")} style={style.buttons}>
+                    <Text style={style.buttonContent}>A</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")} style={style.buttons}>
+                    <Text style={style.buttonContent}>B</Text>
+                </TouchableOpacity>
             </View>
         );
     } else if (version === "doubleButtonDia") {
         buttonFormat = (
             <View style={globalStyles.controllerContainer}>
                 <View style={globalStyles.controllerContainerCol}>
-                    <Pressable onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")}>
-                        <TouchableOpacity style={[style.buttons, { marginTop: "50%" }]}>
-                            <Text style={style.buttonContent}>A</Text>
-                        </TouchableOpacity>
-                    </Pressable>
-                    <Pressable onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")}>
-                        <TouchableOpacity style={[style.buttons, { marginTop: 0, marginLeft: "50%" }]}>
-                            <Text style={style.buttonContent}>B</Text>
-                        </TouchableOpacity>
-                    </Pressable>
+                    <TouchableOpacity onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")} style={[style.buttons, { marginTop: "50%" }]}>
+                        <Text style={style.buttonContent}>A</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")} style={[style.buttons, { marginTop: 0, marginLeft: "50%" }]}>
+                        <Text style={style.buttonContent}>B</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -109,28 +103,20 @@ export default function ButtonScreen(version = "doubleButtonHor") {
         buttonFormat = (
             <View style={globalStyles.controllerContainer}>
                 <View style={globalStyles.controllerContainerCol}>
-                    <Pressable onPressIn={() => buttonDown("X")} onPressOut={() => buttonUp("X")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>X</Text>
-                        </TouchableOpacity>
-                    </Pressable>
-                    <Pressable onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>A</Text>
-                        </TouchableOpacity>
-                    </Pressable>
+                    <TouchableOpacity onPressIn={() => buttonDown("X")} onPressOut={() => buttonUp("X")} style={style.buttons}>
+                        <Text style={style.buttonContent}>X</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")} style={style.buttons}>
+                        <Text style={style.buttonContent}>A</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={globalStyles.controllerContainerCol}>
-                    <Pressable onPressIn={() => buttonDown("Y")} onPressOut={() => buttonUp("Y")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>Y</Text>
-                        </TouchableOpacity>
-                    </Pressable>
-                    <Pressable onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>B</Text>
-                        </TouchableOpacity>
-                    </Pressable>
+                    <TouchableOpacity onPressIn={() => buttonDown("Y")} onPressOut={() => buttonUp("Y")} style={style.buttons}>
+                        <Text style={style.buttonContent}>Y</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")} style={style.buttons}>
+                        <Text style={style.buttonContent}>B</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -138,30 +124,22 @@ export default function ButtonScreen(version = "doubleButtonHor") {
         buttonFormat = (
             <View style={globalStyles.controllerContainer}>
                 <View style={globalStyles.controllerContainerCol}>
-                    <Pressable onPressIn={() => buttonDown("X")} onPressOut={() => buttonUp("X")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>X</Text>
-                        </TouchableOpacity>
-                    </Pressable>
+                    <TouchableOpacity onPressIn={() => buttonDown("X")} onPressOut={() => buttonUp("X")} style={style.buttons}>
+                        <Text style={style.buttonContent}>X</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={globalStyles.controllerContainerCol}>
-                    <Pressable onPressIn={() => buttonDown("Y")} onPressOut={() => buttonUp("Y")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>Y</Text>
-                        </TouchableOpacity>
-                    </Pressable>
-                    <Pressable onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>A</Text>
-                        </TouchableOpacity>
-                    </Pressable>
+                    <TouchableOpacity onPressIn={() => buttonDown("Y")} onPressOut={() => buttonUp("Y")} style={style.buttons}>
+                        <Text style={style.buttonContent}>Y</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")} style={style.buttons}>
+                        <Text style={style.buttonContent}>A</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={globalStyles.controllerContainerCol}>
-                    <Pressable onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")}>
-                        <TouchableOpacity style={style.buttons}>
-                            <Text style={style.buttonContent}>B</Text>
-                        </TouchableOpacity>
-                    </Pressable>
+                    <TouchableOpacity onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")} style={style.buttons}>
+                        <Text style={style.buttonContent}>B</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
