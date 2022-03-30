@@ -58,7 +58,8 @@ export const globalStyles = StyleSheet.create({
         alignSelf: "stretch",
         alignItems: "center",
         margin: 20,
-        paddingStart: "15%"
+        display: 'flex',
+        justifyContent: 'center'
     },
     backButton: {
         borderRadius: 75,

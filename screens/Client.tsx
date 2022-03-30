@@ -88,11 +88,11 @@ export default function Client() {
         * screenWidth, ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current))
       * screenHeight]); //height of quad
 
-      if (whackRef.current) {
-        setWhack(false);
-      }
+      // if (whackRef.current) {
+      //   setWhack(false);
+      // }
 
-      ws.send("m:" + coordRef.current + ":" + whack);    //Send messages
+      ws.send("m:" + coordRef.current + ":" + whackRef.current);    //Send messages
     });
   };
 
@@ -132,6 +132,12 @@ export default function Client() {
       setRight((topRight[0] + rotData.rotation.alpha) / 2);
       cornerSub?.remove();
     });
+  }
+  const _whack = () => {
+    setWhack(true);
+  }
+  const _stopWhack = () => {
+    setWhack(false);
   }
 
   React.useEffect(() => {
@@ -196,6 +202,14 @@ export default function Client() {
             onPress={_setBottomRight}>
             {/* <Text>Bottom Right</Text> */}
             <MaterialIcons name='south-east' size={50} color='white' />
+          </TouchableOpacity>
+        </View>
+        <View style={[globalStyles.calibrateRows]}>
+        <TouchableOpacity style={[globalStyles.calibrationButtons,
+          { marginTop: BUTTON_MARGIN, borderRadius: 35, display: 'flex', justifyContent: 'center' }]}
+            onPressIn={_whack} onPressOut={_stopWhack}>
+            {/* <Text>Bottom Right</Text> */}
+            <MaterialIcons name='brush' size={50} color='white' />
           </TouchableOpacity>
         </View>
       </View>
