@@ -18,15 +18,14 @@ export default function Client() {
 
 
   const navigation = useNavigation();
-  // var roomID = "";
   var ws = React.useRef(new WebSocket('ws://153.106.227.118:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
-      console.log(roomID);
+      // console.log(roomID);
       ws.send("s:c:" + roomID + ":" + nickName);
-      _subscribe();
-      DeviceMotion.setUpdateInterval(100);
+      // _subscribe();
+      // DeviceMotion.setUpdateInterval(100);
     }
   }
 

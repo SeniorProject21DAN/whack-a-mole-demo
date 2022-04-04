@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ImagePickerIOS, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import { ImagePickerIOS, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../../components/globalStyles';
@@ -14,8 +14,14 @@ import { ButtonGroup } from 'react-native-elements';
 export default function ButtonScreen({route}) {
     const navigation = useNavigation();
     let buttonFormat;
+    const [buttons, setButtons] = useState({
+        A: false,
+        B: false,
+        X: false,
+        Y: false,
+    });
 
-    route.params.send("m:");
+    route.params.send("m:A:" + buttons.A + ":B:" + buttons.B + ":X:" + buttons.X + ":Y:" + buttons.Y );
 
     let version = "doubleButtonDia";
     const buttonDown = (buttonType: string) => {
@@ -68,12 +74,6 @@ export default function ButtonScreen({route}) {
         }
     }
 
-    const [buttons, setButtons] = useState({
-        A: false,
-        B: false,
-        X: false,
-        Y: false,
-    });
 
     if (version === "doubleButtonHor") {
         buttonFormat = (
@@ -92,9 +92,11 @@ export default function ButtonScreen({route}) {
                 <View style={globalStyles.controllerContainerCol}>
                     <TouchableOpacity onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")} style={[style.buttons, { marginTop: "50%" }]}>
                         <Text style={style.buttonContent}>A</Text>
+                        {/* <MaterialIcons name="arrow-back" size={28} color='white' /> */}
                     </TouchableOpacity>
                     <TouchableOpacity onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")} style={[style.buttons, { marginTop: 0, marginLeft: "50%" }]}>
                         <Text style={style.buttonContent}>B</Text>
+                        {/* <MaterialIcons name="arrow-back" size={28} color='white' /> */}
                     </TouchableOpacity>
                 </View>
             </View>
