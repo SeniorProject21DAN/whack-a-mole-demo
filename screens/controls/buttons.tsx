@@ -11,7 +11,7 @@ import { ButtonGroup } from 'react-native-elements';
 
 
 
-export default function ButtonScreen({route}) {
+export default function ButtonScreen({ route }) {
     const navigation = useNavigation();
     let buttonFormat;
     const [buttons, setButtons] = useState({
@@ -21,7 +21,7 @@ export default function ButtonScreen({route}) {
         Y: false,
     });
 
-    route.params.send("m:A:" + buttons.A + ":B:" + buttons.B + ":X:" + buttons.X + ":Y:" + buttons.Y );
+    route.params.send("m:buttons:A:" + buttons.A + ":B:" + buttons.B + ":X:" + buttons.X + ":Y:" + buttons.Y);
 
     let version = "doubleButtonDia";
     const buttonDown = (buttonType: string) => {
@@ -172,13 +172,6 @@ const style = StyleSheet.create({
         padding: "20%",
         alignSelf: "center",
         marginTop: "50%",
-        // margin: "1%",
-        // margin: 50,
-        // shadowOffset: {width: 1, height: 1},
-        // shadowColor: '#333',
-        // shadowOpacity: 0.3,
-        // shadowRadius: 2,
-        // opacity: 0.75
     },
     buttonContent: {
         fontSize: 20,

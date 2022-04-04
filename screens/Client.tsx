@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ImagePickerIOS, StyleSheet, TouchableOpacity, TextInput, Button } from 'react-native';
+import { ImagePickerIOS, StyleSheet, TouchableOpacity, TextInput, Button, Vibration } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../components/globalStyles';
@@ -15,14 +15,13 @@ const BUTTON_MARGIN = 8;
 export default function Client() {
   const [roomID, onChangeText] = React.useState("");
   const [nickName, onNickname] = React.useState("");
-
+  const [connection, onConnection] = React.useState("connect");
 
   const navigation = useNavigation();
   var ws = React.useRef(new WebSocket('ws://153.106.227.118:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
-      // console.log(roomID);
       ws.send("s:c:" + roomID + ":" + nickName);
       // _subscribe();
       // DeviceMotion.setUpdateInterval(100);
@@ -92,8 +91,7 @@ export default function Client() {
       }
 
       // ws.send("m:" + coordRef.current + ":" + whack);    //Send messages
-      ws.send("m:" + coordRef.current);    //Send messages
-
+      ws.send("m:coords:" + coordRef.current);    //Send messages
     });
   };
 
@@ -101,6 +99,12 @@ export default function Client() {
     _subscribe();
     DeviceMotion.setUpdateInterval(100);
     navigation.navigate("ButtonScreen", ws);
+  };
+
+  const Back = () => {
+    // _unsubscribe();
+    ws.close();
+    navigation.navigate("Home")
   };
 
   const _unsubscribe = () => {
@@ -152,7 +156,11 @@ export default function Client() {
     ws.onerror = (e) => {
     };
     ws.onmessage = (e) => {
-      console.log(e);
+      // console.log(e);
+      if (e.data === "Client Created!") {
+        Vibration.vibrate();
+        onConnection("Connected!");
+      }
     };
 
     return () => _unsubscribe();
@@ -162,7 +170,7 @@ export default function Client() {
     <View style={globalStyles.screenContainer}>
       <View style={globalStyles.headerContainer}>
         {/* <Text style={globalStyles.headerText}>Top: Room Code</Text> */}
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={Back}>
           <MaterialIcons name="arrow-back" size={28} color='white' />
         </TouchableOpacity>
 
@@ -170,7 +178,7 @@ export default function Client() {
           <TextInput style={globalStyles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
           <TextInput style={globalStyles.textInput} placeholder='Nickname' onChangeText={onNickname} />
 
-          <Button color="#5CB8B1" title="connect" onPress={Connect} />
+          <Button color="#5CB8B1" title={connection} onPress={Connect} />
         </View>
       </View>
 
