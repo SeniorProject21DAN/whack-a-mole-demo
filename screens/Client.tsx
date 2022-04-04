@@ -19,7 +19,7 @@ export default function Client() {
 
   const navigation = useNavigation();
   // var roomID = "";
-  var ws = React.useRef(new WebSocket('ws://153.106.93.160:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
+  var ws = React.useRef(new WebSocket('ws://153.106.227.118:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
@@ -96,6 +96,12 @@ export default function Client() {
       ws.send("m:" + coordRef.current);    //Send messages
 
     });
+  };
+
+  const Ready = () => {
+    _subscribe();
+    DeviceMotion.setUpdateInterval(100);
+    navigation.navigate("ButtonScreen", ws);
   };
 
   const _unsubscribe = () => {
@@ -202,8 +208,9 @@ export default function Client() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={() => navigation.navigate("ButtonScreen", ws)}>
-            <Text style = {{color: "white"}}>Ready!</Text>
+        {/* <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={() => navigation.navigate("ButtonScreen", ws)}> */}
+        <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={Ready}>
+          <Text style={{ color: "white" }}>Ready!</Text>
         </TouchableOpacity>
 
       </View>

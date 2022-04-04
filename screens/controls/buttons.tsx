@@ -15,7 +15,7 @@ export default function ButtonScreen({route}) {
     const navigation = useNavigation();
     let buttonFormat;
 
-    route.params.send("m:" + coordRef.current);
+    route.params.send("m:");
 
     let version = "doubleButtonDia";
     const buttonDown = (buttonType: string) => {
