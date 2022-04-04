@@ -22,7 +22,6 @@ export const globalStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: PRIMARY_COLOR,
         alignItems: "center",
-        justifyContent: "space-evenly",
         flexDirection: "row",
     },
     homeHeaderContainer: {
@@ -30,10 +29,9 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: PRIMARY_COLOR,
     },
     headerText: {
+        textAlign: "center",        
         fontWeight: "bold",
         fontSize: 20,
-        alignSelf: "center",
-        justifyContent: "center",
         color: "white",
     },
     connectedPlayersContainer: {
@@ -59,11 +57,12 @@ export const globalStyles = StyleSheet.create({
         flexDirection: "row",
         borderRadius: 4,
         backgroundColor: FIFTH_COLOR,
-        // alignSelf: "stretch",
-        // alignContent: "center",
         alignItems: "center",
         margin: 20,
-        paddingStart: "15%"
+        // paddingStart: "15%",
+        // alignSelf: "stretch",
+        // alignContent: "center",
+        justifyContent: "center",
     },
     backButton: {
         borderRadius: 75,
@@ -123,7 +122,8 @@ export const globalStyles = StyleSheet.create({
         position: "absolute",
         alignSelf: "center",
         alignContent: "center",
-        padding: "3%",
+        padding: "4%",
+        paddingHorizontal: "6%",
         zIndex: 1,
         top: "43%",
         borderRadius: 30,

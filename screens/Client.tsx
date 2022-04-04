@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ImagePickerIOS, StyleSheet, TouchableOpacity, TextInput, Button, Vibration } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, TextInput, Button, Vibration } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { SlideFromRightIOS } from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
-
 
 const BUTTON_MARGIN = 8;
 
@@ -146,7 +144,6 @@ export default function Client() {
   }
 
   React.useEffect(() => {
-    const serverMessagesList = [];
     ws.onopen = () => {
       // console.log("Connection Attempt.");
     };
@@ -168,7 +165,7 @@ export default function Client() {
 
   return (
     <View style={globalStyles.screenContainer}>
-      <View style={globalStyles.headerContainer}>
+      <View style={[globalStyles.headerContainer, {justifyContent: "space-evenly"}]}>
         {/* <Text style={globalStyles.headerText}>Top: Room Code</Text> */}
         <TouchableOpacity onPress={Back}>
           <MaterialIcons name="arrow-back" size={28} color='white' />

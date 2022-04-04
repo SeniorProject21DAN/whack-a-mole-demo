@@ -9,8 +9,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { ButtonGroup } from 'react-native-elements';
 // Will need to be able to continue to talk to the websocket server and maintain the calibration data established in a previous screen. 
 
-
-
 export default function ButtonScreen({ route }) {
     const navigation = useNavigation();
     let buttonFormat;
@@ -91,12 +89,12 @@ export default function ButtonScreen({ route }) {
             <View style={globalStyles.controllerContainer}>
                 <View style={globalStyles.controllerContainerCol}>
                     <TouchableOpacity onPressIn={() => buttonDown("A")} onPressOut={() => buttonUp("A")} style={[style.buttons, { marginTop: "50%" }]}>
-                        <Text style={style.buttonContent}>A</Text>
-                        {/* <MaterialIcons name="arrow-back" size={28} color='white' /> */}
+                        {/* <Text style={style.buttonContent}>A</Text> */}
+                        <MaterialIcons name="brush" size={48} color='black' />
                     </TouchableOpacity>
                     <TouchableOpacity onPressIn={() => buttonDown("B")} onPressOut={() => buttonUp("B")} style={[style.buttons, { marginTop: 0, marginLeft: "50%" }]}>
-                        <Text style={style.buttonContent}>B</Text>
-                        {/* <MaterialIcons name="arrow-back" size={28} color='white' /> */}
+                        {/* <Text style={style.buttonContent}>B</Text> */}
+                        <MaterialIcons name="auto-fix-normal" size={48} color='black' />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -154,10 +152,10 @@ export default function ButtonScreen({ route }) {
         <View style={globalStyles.screenContainer}>
             <View style={globalStyles.headerContainer}>
                 {/* <Text style={globalStyles.headerText}>Top: Room Code</Text> */}
-                <TouchableOpacity onPress={() => navigation.navigate("Client")}>
+                <TouchableOpacity style={{padding: 20}} onPress={() => navigation.navigate("Client")}>
                     <MaterialIcons name="arrow-back" size={28} color='white' />
                 </TouchableOpacity>
-                <Text style={globalStyles.headerText}>Game Screen with Buttons</Text>
+                <Text style={[globalStyles.headerText, {paddingHorizontal: "20%"}]}>Pictionary</Text>
             </View>
             {/* <View style={{ flexDirection: "row", flex: 5 }}> */}
             {buttonFormat}
@@ -169,7 +167,7 @@ const style = StyleSheet.create({
     buttons: {
         backgroundColor: "#51FCC9",
         borderRadius: 100,
-        padding: "20%",
+        padding: "15%",
         alignSelf: "center",
         marginTop: "50%",
     },
