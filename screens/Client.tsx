@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const BUTTON_MARGIN = 8;
 
@@ -30,8 +30,8 @@ export default function Client() {
   const [calibrate, setCalibrate] = React.useState(true);
   const calibrateRef = React.useRef(calibrate);
 
-  const [artist, setArtist] = React.useState(false);
-  const artistRef = React.useRef(artist);
+  const [currArtist, setCurrArtist] = React.useState("");
+  const currArtistRef = React.useRef(currArtist);
 
   const navigation = useNavigation();
   var ws = React.useRef(new WebSocket('ws://192.168.1.15:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
@@ -178,9 +178,9 @@ export default function Client() {
     setWhack(false);
     whackRef.current = false;
   }
-  
-  const submitGuess = () => {
-    
+
+  const correctGuess = () => {
+    ws.send("m:Answered");
   }
 
   React.useEffect(() => {
@@ -286,38 +286,24 @@ export default function Client() {
       }
       {!calibrateRef.current &&
         <View style={globalStyles.calibrationContainer}>
-          <View style={[globalStyles.calibrateRows]}>
-            {artistRef.current &&
-              <TouchableOpacity style={[globalStyles.calibrationButtons,
-              { marginTop: BUTTON_MARGIN, borderRadius: 35, display: 'flex', justifyContent: 'center' }]}
-                onPressIn={_whack} onPressOut={_stopWhack}>
-                {/* <Text>Bottom Right</Text> */}
-                <MaterialIcons name='brush' size={50} color='white' />
-              </TouchableOpacity>
-            }
-            {!artistRef.current &&
-              <View style={{
-                flex: 1, backgroundColor: "#5CB8B1",
-              }}>
-                <TextInput style={[globalStyles.textInput, {marginHorizontal: 50, marginTop: 30, flex: .15}]} placeholder='Guess'
-                  onChangeText={onChangeText} />
-                <TouchableOpacity style={{
-                  flex: 0.15,
-                  flexDirection: "row",
-                  borderRadius: 20,
-                  backgroundColor: "#51FCC9",
-                  alignItems: "center",
-                  marginHorizontal: 50,
-                  marginVertical: 10,
-                  justifyContent: "center",
-                }}
-                  onPress={submitGuess}>
-                  <Text style={{ color: 'white', fontSize: 20 }}>
-                    Submit Guess
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            }
+          <View style={{
+            flex: 1,
+            backgroundColor: "#5CB8B1",
+            flexDirection: "column",
+          }}>
+            <TouchableOpacity style={[globalStyles.calibrationButtons,
+            { marginTop: BUTTON_MARGIN, borderRadius: 20, display: 'flex', justifyContent: 'center', flex: 0.2 }]}
+              onPress={correctGuess}>
+              {/* <Text>Bottom Right</Text> */}
+              <Text style={{color: "white", fontSize: 25}}>Someone Got It!</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[globalStyles.calibrationButtons,
+            { marginTop: BUTTON_MARGIN, borderRadius: 35, display: 'flex', justifyContent: 'center', flex: 0.8 }]}
+              onPressIn={_whack} onPressOut={_stopWhack}>
+              {/* <Text>Bottom Right</Text> */}
+              {/* <MaterialIcons name='brush' size={50} color='white' /> */}
+              <MaterialCommunityIcons name='eraser' size={50} color='white' />
+            </TouchableOpacity>
           </View>
         </View>
       }

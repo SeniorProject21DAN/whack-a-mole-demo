@@ -30,7 +30,7 @@ export default function Home() {
                         <Text style={globalStyles.headerText}>Host</Text>
                     </View>
                 </TouchableOpacity> */}
-                <TouchableOpacity style={globalStyles.buttons} onPress={() => navigation.navigate("Client")}>
+                <TouchableOpacity style={globalStyles.buttons} onPress={() => navigation.navigate("Client" as any)}>
                     <View style={[globalStyles.buttonContent, { backgroundColor: "#5CB8B1" }]}>
                         <Text style={globalStyles.headerText}>Get Started!</Text>
                     </View>
