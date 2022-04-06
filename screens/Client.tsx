@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../components/globalStyles';
 import { DeviceMotion } from 'expo-sensors';
 import { Subscription } from 'expo-modules-core';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const BUTTON_MARGIN = 8;
 
@@ -15,8 +15,26 @@ export default function Client() {
   const [nickName, onNickname] = React.useState("");
   const [connection, onConnection] = React.useState("connect");
 
+  const [word, setWord] = React.useState("???");
+  const wordRef = React.useRef(word);
+
+  const [currNickname, setCurrNickname] = React.useState("???");
+  const nicknameRef = React.useRef(currNickname);
+
+  const [ready, setReady] = React.useState(false);
+  const readyRef = React.useRef(ready);
+
+  const [started, setStarted] = React.useState(false);
+  const startedRef = React.useRef(started);
+
+  const [calibrate, setCalibrate] = React.useState(true);
+  const calibrateRef = React.useRef(calibrate);
+
+  const [artist, setArtist] = React.useState(false);
+  const artistRef = React.useRef(artist);
+
   const navigation = useNavigation();
-  var ws = React.useRef(new WebSocket('ws://153.106.227.118:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
+  var ws = React.useRef(new WebSocket('ws://192.168.1.15:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
@@ -28,8 +46,8 @@ export default function Client() {
 
   let rotSub: Subscription | null = null;
 
-  const screenWidth = 150;
-  const screenHeight = 100;
+  const screenWidth = 1;
+  const screenHeight = 1;
 
   const [topLeft, setTopLeft] = useState([-2, 1]); //x: 0, y: 1
   const [topRight, setTopRight] = useState([-1, 1]);
@@ -84,25 +102,29 @@ export default function Client() {
         * screenWidth, ((-data.rotation.beta + topRef.current) / Math.abs(bottomRef.current - topRef.current))
       * screenHeight]); //height of quad
 
-      if (whackRef.current) {
-        setWhack(false);
-      }
+      // if (whackRef.current) {
+      //   setWhack(false);
+      // }
 
-      // ws.send("m:" + coordRef.current + ":" + whack);    //Send messages
-      ws.send("m:coords:" + coordRef.current);    //Send messages
+      ws.send("m:" + coordRef.current + ":" + whackRef.current);    //Send messages
+      //ws.send("m:coords:" + coordRef.current);    //Send messages
     });
   };
 
-  const Ready = () => {
+  const _Ready = () => {
+    ws.send("m:Ready=" + !readyRef.current);
+    setReady(!readyRef.current);
+    readyRef.current = !readyRef.current;
     _subscribe();
     DeviceMotion.setUpdateInterval(100);
-    navigation.navigate("ButtonScreen", ws);
+    _setCalibrate();
+    //navigation.navigate("ButtonScreen" as any, ws);
   };
 
   const Back = () => {
     // _unsubscribe();
     ws.close();
-    navigation.navigate("Home")
+    navigation.navigate("Home" as any)
   };
 
   const _unsubscribe = () => {
@@ -143,6 +165,24 @@ export default function Client() {
     });
   }
 
+  const _setCalibrate = () => {
+    setCalibrate(!calibrateRef.current);
+    calibrateRef.current = !calibrateRef.current;
+  }
+
+  const _whack = () => {
+    setWhack(true);
+    whackRef.current = true;
+  }
+  const _stopWhack = () => {
+    setWhack(false);
+    whackRef.current = false;
+  }
+  
+  const submitGuess = () => {
+    
+  }
+
   React.useEffect(() => {
     ws.onopen = () => {
       // console.log("Connection Attempt.");
@@ -165,59 +205,122 @@ export default function Client() {
 
   return (
     <View style={globalStyles.screenContainer}>
-      <View style={[globalStyles.headerContainer, {justifyContent: "space-evenly"}]}>
+      <View style={[globalStyles.headerContainer, { justifyContent: "space-evenly" }]}>
         {/* <Text style={globalStyles.headerText}>Top: Room Code</Text> */}
         <TouchableOpacity onPress={Back}>
           <MaterialIcons name="arrow-back" size={28} color='white' />
         </TouchableOpacity>
 
         <View style={globalStyles.headerSubContainer}>
-          <TextInput style={globalStyles.textInput} placeholder='Room Code' onChangeText={onChangeText} />
-          <TextInput style={globalStyles.textInput} placeholder='Nickname' onChangeText={onNickname} />
+          <TextInput style={globalStyles.textInput} placeholder='Room Code' onChangeText={onChangeText} editable={connection !== "Connected!"} />
+          <TextInput style={globalStyles.textInput} placeholder='Nickname' onChangeText={onNickname} editable={connection !== "Connected!"} />
 
           <Button color="#5CB8B1" title={connection} onPress={Connect} />
         </View>
       </View>
 
-      <View style={globalStyles.calibrationContainer}>
-
-        {/* <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text> */}
-        <View style={globalStyles.calibrateRows}>
-          <TouchableOpacity style={[globalStyles.calibrationButtons,
-          { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
-            onPress={_setTopLeft}>
-            {/* <Text>Top Left</Text> */}
-            <MaterialIcons name='north-west' size={50} color='white' />
-          </TouchableOpacity>
-          <TouchableOpacity style={[globalStyles.calibrationButtons,
-          { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
-            onPress={_setTopRight}>
-            {/* <Text>Top Right</Text> */}
-            <MaterialIcons name='north-east' size={50} color='white' />
-          </TouchableOpacity>
-        </View>
-
-        <View style={globalStyles.calibrateRows}>
-          <TouchableOpacity style={[globalStyles.calibrationButtons,
-          { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
-            onPress={_setBottomLeft}>
-            {/* <Text>Bottom Left</Text> */}
-            <MaterialIcons name='south-west' size={50} color='white' />
-          </TouchableOpacity>
-          <TouchableOpacity style={[globalStyles.calibrationButtons,
-          { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
-            onPress={_setBottomRight}>
-            {/* <Text>Bottom Right</Text> */}
-            <MaterialIcons name='south-east' size={50} color='white' />
-          </TouchableOpacity>
-        </View>
-
-        {/* <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={() => navigation.navigate("ButtonScreen", ws)}> */}
-        <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={Ready}>
-          <Text style={{ color: "white" }}>Ready!</Text>
+      <View style={{ backgroundColor: "#5CB8B1", flex: 0.5 }}>
+        <TouchableOpacity style={{
+          flex: 1,
+          flexDirection: "row",
+          borderRadius: 20,
+          backgroundColor: "#51FCC9",
+          alignItems: "center",
+          marginHorizontal: 50,
+          marginVertical: 10,
+          justifyContent: "center",
+        }}
+          onPress={_setCalibrate}>
+          <Text style={{ color: 'white', fontSize: 20 }}>
+            {calibrateRef.current && "Hide Calibration"}
+            {!calibrateRef.current && "Show Calibration"}
+          </Text>
         </TouchableOpacity>
-
       </View>
+
+      {calibrateRef.current &&
+        <View style={globalStyles.calibrationContainer}>
+
+          {/* <Text style={{ alignSelf: "center" }}>Bottom: Calibrate</Text> */}
+          <View style={globalStyles.calibrateRows}>
+            <TouchableOpacity style={[globalStyles.calibrationButtons,
+            { marginBottom: BUTTON_MARGIN, borderTopLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
+              onPress={_setTopLeft}>
+              {/* <Text>Top Left</Text> */}
+              <MaterialIcons name='north-west' size={50} color='white' />
+            </TouchableOpacity>
+            <TouchableOpacity style={[globalStyles.calibrationButtons,
+            { marginBottom: BUTTON_MARGIN, borderTopRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
+              onPress={_setTopRight}>
+              {/* <Text>Top Right</Text> */}
+              <MaterialIcons name='north-east' size={50} color='white' />
+            </TouchableOpacity>
+          </View>
+
+          <View style={globalStyles.calibrateRows}>
+            <TouchableOpacity style={[globalStyles.calibrationButtons,
+            { marginTop: BUTTON_MARGIN, borderBottomLeftRadius: 35, marginRight: BUTTON_MARGIN }]}
+              onPress={_setBottomLeft}>
+              {/* <Text>Bottom Left</Text> */}
+              <MaterialIcons name='south-west' size={50} color='white' />
+            </TouchableOpacity>
+            <TouchableOpacity style={[globalStyles.calibrationButtons,
+            { marginTop: BUTTON_MARGIN, borderBottomRightRadius: 35, marginLeft: BUTTON_MARGIN }]}
+              onPress={_setBottomRight}>
+              {/* <Text>Bottom Right</Text> */}
+              <MaterialIcons name='south-east' size={50} color='white' />
+            </TouchableOpacity>
+          </View>
+
+          {/* <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={() => navigation.navigate("ButtonScreen", ws)}> */}
+          {!startedRef.current &&
+            <TouchableOpacity style={[globalStyles.calibrationButtons, globalStyles.calibrationButtonExtra]} onPress={_Ready}>
+              <Text style={{ color: "white" }}>
+                {!readyRef.current && "Ready!"}
+                {readyRef.current && "Unready"}
+              </Text>
+            </TouchableOpacity>
+          }
+
+        </View>
+      }
+      {!calibrateRef.current &&
+        <View style={globalStyles.calibrationContainer}>
+          <View style={[globalStyles.calibrateRows]}>
+            {artistRef.current &&
+              <TouchableOpacity style={[globalStyles.calibrationButtons,
+              { marginTop: BUTTON_MARGIN, borderRadius: 35, display: 'flex', justifyContent: 'center' }]}
+                onPressIn={_whack} onPressOut={_stopWhack}>
+                {/* <Text>Bottom Right</Text> */}
+                <MaterialIcons name='brush' size={50} color='white' />
+              </TouchableOpacity>
+            }
+            {!artistRef.current &&
+              <View style={{
+                flex: 1, backgroundColor: "#5CB8B1",
+              }}>
+                <TextInput style={[globalStyles.textInput, {marginHorizontal: 50, marginTop: 30, flex: .15}]} placeholder='Guess'
+                  onChangeText={onChangeText} />
+                <TouchableOpacity style={{
+                  flex: 0.15,
+                  flexDirection: "row",
+                  borderRadius: 20,
+                  backgroundColor: "#51FCC9",
+                  alignItems: "center",
+                  marginHorizontal: 50,
+                  marginVertical: 10,
+                  justifyContent: "center",
+                }}
+                  onPress={submitGuess}>
+                  <Text style={{ color: 'white', fontSize: 20 }}>
+                    Submit Guess
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            }
+          </View>
+        </View>
+      }
     </View>
   )
 }

@@ -19,7 +19,7 @@ export const globalStyles = StyleSheet.create({
         justifyContent: "space-evenly"
     },
     headerContainer: {
-        flex: 1,
+        flex: 1.25,
         backgroundColor: PRIMARY_COLOR,
         alignItems: "center",
         flexDirection: "row",
@@ -125,7 +125,7 @@ export const globalStyles = StyleSheet.create({
         padding: "4%",
         paddingHorizontal: "6%",
         zIndex: 1,
-        top: "43%",
+        top: "40%",
         borderRadius: 30,
     },
     controllerContainer: {

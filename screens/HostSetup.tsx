@@ -37,7 +37,7 @@ export default function HostSetup() {
     { text: "Example6", key: "7" },
   ]);
 
-  var ws = React.useRef(new WebSocket('ws://153.106.227.143:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
+  var ws = React.useRef(new WebSocket('ws://192.168.1.15:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
   let rotSub: Subscription | null = null;
 
   const screenWidth = 150;
