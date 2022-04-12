@@ -33,12 +33,17 @@ export default function Client() {
   const [currArtist, setCurrArtist] = React.useState("");
   const currArtistRef = React.useRef(currArtist);
 
+  const [currEraser, setCurrEraser] = React.useState("");
+  const currEraserRef = React.useRef(currEraser);
+
   const navigation = useNavigation();
   var ws = React.useRef(new WebSocket('ws://192.168.1.15:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
       ws.send("s:c:" + roomID + ":" + nickName);
+      setCurrNickname(nickName);
+      nicknameRef.current = nickName;
       // _subscribe();
       // DeviceMotion.setUpdateInterval(100);
     }
@@ -112,12 +117,12 @@ export default function Client() {
   };
 
   const _Ready = () => {
-    ws.send("m:Ready=" + !readyRef.current);
+    ws.send("m:ready=" + !readyRef.current);
     setReady(!readyRef.current);
     readyRef.current = !readyRef.current;
-    _subscribe();
+    //_subscribe();
     DeviceMotion.setUpdateInterval(100);
-    _setCalibrate();
+    //_setCalibrate();
     //navigation.navigate("ButtonScreen" as any, ws);
   };
 
@@ -180,7 +185,8 @@ export default function Client() {
   }
 
   const correctGuess = () => {
-    ws.send("m:Answered");
+    ws.send("m:answered");
+    _unsubscribe();
   }
 
   React.useEffect(() => {
@@ -193,10 +199,36 @@ export default function Client() {
     ws.onerror = (e) => {
     };
     ws.onmessage = (e) => {
-      // console.log(e);
+      console.log(e);
       if (e.data === "Client Created!") {
         Vibration.vibrate();
         onConnection("Connected!");
+      }
+      if (e.data.split(":").length === 3) {
+        let data = e.data.split(":");
+        //console.log(data);
+        if (data[2].startsWith("artist")) {
+          setCurrArtist(data[2].split("=")[1]);
+          currArtistRef.current = data[2].split("=")[1];
+          console.log(currArtistRef.current);
+          console.log(nicknameRef.current);
+          if (data[2].split("=")[1] === nicknameRef.current) {
+            _subscribe();
+          }
+          else {
+            _unsubscribe();
+          }
+        }
+        if (data[2].startsWith("word")) {
+          setWord(data[2].split("=")[1]);
+          wordRef.current = data[2].split("=")[1];
+        }
+        if (data[2] === "start") {
+          setCalibrate(false);
+          calibrateRef.current = false;
+          setStarted(true);
+          startedRef.current = true;
+        }
       }
     };
 
@@ -286,25 +318,47 @@ export default function Client() {
       }
       {!calibrateRef.current &&
         <View style={globalStyles.calibrationContainer}>
-          <View style={{
-            flex: 1,
-            backgroundColor: "#5CB8B1",
-            flexDirection: "column",
-          }}>
-            <TouchableOpacity style={[globalStyles.calibrationButtons,
-            { marginTop: BUTTON_MARGIN, borderRadius: 20, display: 'flex', justifyContent: 'center', flex: 0.2 }]}
-              onPress={correctGuess}>
-              {/* <Text>Bottom Right</Text> */}
-              <Text style={{color: "white", fontSize: 25}}>Someone Got It!</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[globalStyles.calibrationButtons,
-            { marginTop: BUTTON_MARGIN, borderRadius: 35, display: 'flex', justifyContent: 'center', flex: 0.8 }]}
-              onPressIn={_whack} onPressOut={_stopWhack}>
-              {/* <Text>Bottom Right</Text> */}
-              {/* <MaterialIcons name='brush' size={50} color='white' /> */}
-              <MaterialCommunityIcons name='eraser' size={50} color='white' />
-            </TouchableOpacity>
-          </View>
+          {(currArtistRef.current === nicknameRef.current || currEraserRef.current === nicknameRef.current) &&
+            <View style={{
+              flex: 1,
+              backgroundColor: "#5CB8B1",
+              flexDirection: "column",
+            }}>
+              <View style={{ display: 'flex', alignItems: 'center', backgroundColor: "#5CB8B1" }}>
+                <Text style={{ color: "white", fontSize: 25 }}>
+                  Current Word: {wordRef.current}
+                </Text>
+              </View>
+              <TouchableOpacity style={[globalStyles.calibrationButtons,
+              { marginTop: BUTTON_MARGIN, borderRadius: 20, display: 'flex', justifyContent: 'center', flex: 0.2 }]}
+                onPress={correctGuess}>
+                {/* <Text>Bottom Right</Text> */}
+                <Text style={{ color: "white", fontSize: 25 }}>Someone Got It!</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[globalStyles.calibrationButtons,
+              { marginTop: BUTTON_MARGIN, borderRadius: 35, display: 'flex', justifyContent: 'center', flex: 0.8 }]}
+                onPressIn={_whack} onPressOut={_stopWhack}>
+                {/* <Text>Bottom Right</Text> */}
+                {/* <MaterialIcons name='brush' size={50} color='white' /> */}
+                {currEraserRef.current === nicknameRef.current &&
+                  <MaterialCommunityIcons name='eraser' size={50} color='white' />
+                }
+                {currArtistRef.current === nicknameRef.current &&
+                  <MaterialCommunityIcons name='brush' size={50} color='white' />
+                }
+              </TouchableOpacity>
+            </View>
+          }
+          {
+            currArtistRef.current !== nicknameRef.current &&
+            currEraserRef.current !== nicknameRef.current && startedRef.current &&
+            <View style={{ display: 'flex', alignItems: 'center', backgroundColor: "#5CB8B1" }}>
+              <Text style={{ color: "white", fontSize: 25 }}>
+                Current Artist: {currArtistRef.current}
+                Current Eraser: {currEraserRef.current}
+              </Text>
+            </View>
+          }
         </View>
       }
     </View>
