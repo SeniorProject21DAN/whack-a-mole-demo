@@ -37,7 +37,7 @@ export default function Client() {
   const currEraserRef = React.useRef(currEraser);
 
   const navigation = useNavigation();
-  var ws = React.useRef(new WebSocket('ws://192.168.1.15:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
+  var ws = React.useRef(new WebSocket('ws://153.106.227.120:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
@@ -215,9 +215,21 @@ export default function Client() {
           if (data[2].split("=")[1] === nicknameRef.current) {
             _subscribe();
           }
-          else {
-            _unsubscribe();
+          // else {
+          //   _unsubscribe();
+          // }
+        }
+        if (data[2].startsWith("eraser")) {
+          setCurrEraser(data[2].split("=")[1]);
+          currEraserRef.current = data[2].split("=")[1];
+          console.log(currEraserRef.current);
+          console.log(nicknameRef.current);
+          if (data[2].split("=")[1] === nicknameRef.current) {
+            _subscribe();
           }
+          // else if(currArtistRef.current === nicknameRef.current) {
+          //   _unsubscribe();
+          // }
         }
         if (data[2].startsWith("word")) {
           setWord(data[2].split("=")[1]);
