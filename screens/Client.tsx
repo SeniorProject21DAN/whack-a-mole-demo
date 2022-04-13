@@ -37,7 +37,7 @@ export default function Client() {
   const currEraserRef = React.useRef(currEraser);
 
   const navigation = useNavigation();
-  var ws = React.useRef(new WebSocket('ws://153.106.227.120:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
+  var ws = React.useRef(new WebSocket('ws://153.106.88.45:8080')).current;   //This needs to altered to the IP of the server when attempting to get this to run. Double check each time. 
 
   const Connect = () => {
     if (ws.OPEN) {
@@ -121,7 +121,6 @@ export default function Client() {
     setReady(!readyRef.current);
     readyRef.current = !readyRef.current;
     //_subscribe();
-    DeviceMotion.setUpdateInterval(100);
     //_setCalibrate();
     //navigation.navigate("ButtonScreen" as any, ws);
   };
@@ -190,6 +189,7 @@ export default function Client() {
   }
 
   React.useEffect(() => {
+    DeviceMotion.setUpdateInterval(100);
     ws.onopen = () => {
       // console.log("Connection Attempt.");
     };
