@@ -173,14 +173,14 @@ export default function HostSetup() {
     ws.send("m:buzz");
   }
 
-  const newPlayerHandler = (name) => {
+  const newPlayerHandler = (name: any) => {
     setPlayers((newPlayer) => {
       return [
         { text: name, key: Math.random().toString() }, ...newPlayer]
     })
   }
 
-  const removePlayerHandler = (name) => {
+  const removePlayerHandler = (name: any) => {
     setPlayers((removePlayer) => {
       return removePlayer.filter(players => players.text != name)
     })
@@ -189,7 +189,7 @@ export default function HostSetup() {
   return (
     <View style={globalStyles.screenContainer}>
       <View style={globalStyles.headerContainer}>
-        <TouchableOpacity style={globalStyles.backButton} onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity style={globalStyles.backButton} onPress={() => navigation.navigate("Home" as any)}>
           <MaterialIcons name='arrow-back' size={28} color='white' />
         </TouchableOpacity>
         <Text style={globalStyles.headerText}>Room Code: {roomID}</Text>
