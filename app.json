@@ -1,5 +1,14 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "@config-plugins/react-native-google-cast",
+        {
+          "iosReceiverAppId": "4E6CB52E",
+          "androidReceiverAppId": "4E6CB52E"
+        }
+      ]
+    ],
     "name": "whack-a-mole-demo",
     "slug": "whack-a-mole-demo",
     "version": "1.0.0",
@@ -25,7 +34,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.straij.whackamoledemo"
     },
     "androidNavigationBar": {
       "visible": "immersive"
