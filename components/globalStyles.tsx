@@ -19,17 +19,19 @@ export const globalStyles = StyleSheet.create({
         justifyContent: "space-evenly"
     },
     headerContainer: {
-        flex: 1,
+        flex: 1.25,
         backgroundColor: PRIMARY_COLOR,
         alignItems: "center",
-        justifyContent: "space-evenly",
         flexDirection: "row",
     },
+    homeHeaderContainer: {
+        flex: 1,
+        backgroundColor: PRIMARY_COLOR,
+    },
     headerText: {
+        textAlign: "center",        
         fontWeight: "bold",
         fontSize: 20,
-        alignSelf: "center",
-        justifyContent: "center",
         color: "white",
     },
     connectedPlayersContainer: {
@@ -41,7 +43,7 @@ export const globalStyles = StyleSheet.create({
     },
     calibrationContainer: {
         flex: 3,
-        backgroundColor: TERTIARY_COLOR,
+        backgroundColor: FOURTH_COLOR,
         flexDirection: "column",
         justifyContent: "space-evenly"
     },
@@ -55,10 +57,12 @@ export const globalStyles = StyleSheet.create({
         flexDirection: "row",
         borderRadius: 4,
         backgroundColor: FIFTH_COLOR,
-        alignSelf: "stretch",
         alignItems: "center",
         margin: 20,
-        paddingStart: "15%"
+        // paddingStart: "15%",
+        // alignSelf: "stretch",
+        // alignContent: "center",
+        justifyContent: "center",
     },
     backButton: {
         borderRadius: 75,
@@ -111,6 +115,29 @@ export const globalStyles = StyleSheet.create({
     },
     buttonContent: {
         flex: 1,
-        alignItems: "center"
+        alignItems: "center",
+    },
+    calibrationButtonExtra: {
+        backgroundColor: TERTIARY_COLOR,
+        position: "absolute",
+        alignSelf: "center",
+        alignContent: "center",
+        padding: "4%",
+        paddingHorizontal: "6%",
+        zIndex: 1,
+        top: "40%",
+        borderRadius: 30,
+    },
+    controllerContainer: {
+        flex: 5,
+        backgroundColor: FOURTH_COLOR,
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
+    controllerContainerCol: {
+        flex: 1,
+        backgroundColor: FOURTH_COLOR,
+        flexDirection: "column",
+        justifyContent: "space-evenly"
     },
 });
