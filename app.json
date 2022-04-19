@@ -6,10 +6,8 @@
         {
           "iosReceiverAppId": "4E6CB52E",
           "androidReceiverAppId": "4E6CB52E"
-
         }
       ]
-        
     ],
     "name": "whack-a-mole-demo",
     "slug": "whack-a-mole-demo",
@@ -30,7 +28,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.straij.whackamoledemo"
     },
     "android": {
       "adaptiveIcon": {
